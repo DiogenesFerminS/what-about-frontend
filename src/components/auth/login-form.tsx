@@ -1,11 +1,19 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "../ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "../ui/field";
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { type LoginForm, loginSchema } from "@/lib/schemas/login.schema";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const LoginForm = () => {
   const form = useForm<LoginForm>({
@@ -13,43 +21,53 @@ const LoginForm = () => {
       term: "",
       password: "",
     },
-    resolver: zodResolver(loginSchema)
+    resolver: zodResolver(loginSchema),
   });
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const router = useRouter();
 
   const onSubmit = async (data: LoginForm) => {
-    const res = await fetch('http://localhost:8080/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      credentials: 'include'
-    });
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+          credentials: "include",
+        }
+      );
 
-    const result = await res.json();
+      const resp = await res.json();
 
-    if (!result.ok) {
-      form.setError("term", {
-        type: "manual",
-        message: result.error,
-      });
+      if (!res.ok) {
+        form.setError("term", {
+          type: "manual",
+          message: resp.error,
+        });
 
-      form.setError("password", {
-        type: "manual",
-        message: result.error,
-      });
+        form.setError("password", {
+          type: "manual",
+          message: resp.error,
+        });
+        return;
+      }
+
+      router.push("/wa");
+    } catch{
+      toast.error('Something is wrong', {
+        description: 'An unexpected error has occurred, please try again later',
+        position: "top-center",
+        duration: 3000
+      })
     }
-    console.log(result);
-    
-  }
+  };
 
   return (
-    <form 
-      className="mt-3"
-      onSubmit={form.handleSubmit(onSubmit)}
-    >
+    <form className="mt-3" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup className="my-4">
         <Controller
           name="term"

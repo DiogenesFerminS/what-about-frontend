@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "../ui/button"
+import { useRouter } from "next/navigation";
 
 export interface Data {
     id:                 string;
@@ -21,31 +22,52 @@ export interface Data {
 
 
 const GetProfile = () => {
-  const [profile, setProfile] = useState<Data | null>(null)
-  const [error, setError] = useState< string | null>('')
+  const [profile, setProfile] = useState<Data | null>(null);
+  const [error, setError] = useState< string | null>('');
+
+  const router = useRouter();
 
   const punchEndPoint = async () => {
-    const resp = await fetch('http://localhost:8080/api/users/profile',{
+    const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/profile`,{
         credentials: "include",
     });
 
     const data = await resp.json();
-
+  
     if(!data.ok) {
         setError(data.error);
     }
 
-      setProfile(data.data);
+    setProfile(data.data);
+  }
+
+  const logout = async () => {
+    const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/logout`, {
+      credentials: "include",
+    });
+
+    const data = await resp.json();
+
+    router.push('/auth/login');
   }
 
   return (
-    <div>
-        <Button
+    <div className="min-h-screen flex justify-center items-center flex-col">
+      <div>
+          <Button
             variant={"default"}
             onClick={() => punchEndPoint()}
-        >Get Profile</Button>
-        <pre>{JSON.stringify(profile)}</pre>
+          >Get Profile</Button>
+
+          <Button
+            variant={"destructive"}
+            onClick={() => logout() }
+          >Logout</Button>
+      </div>
+        
+        <pre>{JSON.stringify(profile, null, 2)}</pre>
         <span>{error}</span>
+
     </div>
   )
 }

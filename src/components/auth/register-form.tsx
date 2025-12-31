@@ -6,6 +6,7 @@ import { useState } from "react"
 import { Button } from "../ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { type RegisterForm, registerSchema } from "@/lib/schemas/register.schema"
+import { toast } from "sonner"
 
 const RegisterForm = () => {
   const form = useForm<RegisterForm>({
@@ -19,8 +20,47 @@ const RegisterForm = () => {
 
 const [showPassword, setShowPassword] = useState<boolean>(false);
 
-const onSubmit = (data: RegisterForm) => {
-    console.log(data);
+const onSubmit = async (data: RegisterForm) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/create-account`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const resp = await res.json();
+    if(!resp.ok) {
+    
+      if(resp.error.includes('username')) {
+        form.setError("username", {
+          type: "manual",
+          message: resp.error,
+        });
+        return;
+      }
+
+      if(resp.error.includes('email')) {
+        form.setError("email", {
+          type: "manual",
+          message: resp.error,
+        });
+        return;
+      }
+    };
+
+    toast.success(resp.data, {
+      position: "top-center",
+      duration: 5000,
+    });
+  } catch {
+    toast.error('Something is wrong', {
+      description: 'An unexpected error has occurred, please try again later',
+      position: "top-center",
+      duration: 3000
+    })
+  }
 }
   
   return (
