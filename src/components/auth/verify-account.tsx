@@ -10,26 +10,35 @@ interface Props {
 
 const AccountValidator = ({token}: Props) => {
   const [message, setMessage] = useState<string>('');
-  const [error, setError] = useState<boolean>(true);
-
-  if(!token || typeof token !== 'string') {
-    setError(true);
-    setMessage('Invalid or non-existent token')
-  }
+  const [error, setError] = useState<boolean>(false);
+  const [isVerify, setIsVerify] = useState<boolean>(false);
 
   useEffect(() => {
     const getVerify = async () => {
-      const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify-account/${token}`);
-      const res = await resp.json();
 
-      if (!res.ok){
+      if(!token || typeof token !== 'string') {
         setError(true);
-        setMessage(res.error);
-        return
+        setMessage('Invalid or non-existent token');
+        return;
       };
 
-      setError(false);
-      setMessage('Account successfully verified');
+      try {
+        const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify-account/${token}`);
+        const res = await resp.json();
+
+        if (!res.ok){
+          setError(true);
+          setMessage(res.error);
+          return
+        };
+
+        setError(false);
+        setIsVerify(true)
+        setMessage('Account successfully verified');
+      } catch{
+        setError(true);
+        setMessage('Connection failed')
+      }
     };
 
     getVerify();
@@ -50,12 +59,12 @@ const AccountValidator = ({token}: Props) => {
         </Alert>
         <div>
             {
-                error
-                ? <></>
-                : <Link 
+                isVerify
+                ? <Link 
                     href={'/auth/login'}
                     className='hover:underline' 
-                >Congratulations, your account has been verified. Log in here.</Link>
+                  >Congratulations, your account has been verified. Log in here.</Link>
+                : <></>
             }
         </div>
     </div>
