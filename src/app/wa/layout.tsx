@@ -1,19 +1,18 @@
 import { AppSideBar } from "@/components/common/sideBar/sidebar-app"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { UsersService } from "@/services/users.service";
+import Topbar from "@/components/common/topbar/topbar";
+import { SidebarProvider } from "@/components/ui/sidebar"
 
 const AuthLayout = async ({ children }: { children: React.ReactNode}) => {
-
-  const user = await UsersService.getUser();
-  console.log(user);
 
   return (
     <SidebarProvider>
       <AppSideBar/>
-      <main className="w-full">
-        <SidebarTrigger/>
-        {children}
-      </main>
+        <Topbar/>
+
+        <main className="w-full dark:bg-stone-950 bg-gray-100 pt-13">
+          {children}
+        </main>
+
     </SidebarProvider>
   )
 }

@@ -20,7 +20,7 @@ const SideBarItem = ({href, name, icon}: Props) => {
             <span className="[&_svg]:size-6"> 
              {icon}
             </span>
-            <span className='text-lg'>{name}</span>
+            <span>{name}</span>
         </Link>
     </SidebarMenuButton>
   )

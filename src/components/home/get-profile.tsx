@@ -3,26 +3,11 @@
 import { useState } from "react"
 import { Button } from "../ui/button"
 import { useRouter } from "next/navigation";
-
-export interface Data {
-    id:                 string;
-    email:              string;
-    username:           string;
-    name:               string;
-    bio:                string;
-    avatarUrl:          null;
-    location:           string;
-    isVerified:         boolean;
-    isActive:           boolean;
-    verifyToken:        null;
-    resetPasswordToken: null;
-    createdAt:          Date;
-    updatedAt:          Date;
-}
-
+import { User } from "@/interfaces/common/user-interface";
+import { toast } from "sonner";
 
 const GetProfile = () => {
-  const [profile, setProfile] = useState<Data | null>(null);
+  const [profile, setProfile] = useState<User | null>(null);
   const [error, setError] = useState< string | null>('');
 
   const router = useRouter();
@@ -46,7 +31,13 @@ const GetProfile = () => {
       credentials: "include",
     });
 
-    const data = await resp.json();
+    if(!resp.ok) {
+      toast.error('Something is wrong', {
+        description: 'An unexpected error has occurred, please try again later',
+        position: "top-center",
+        duration: 3000
+      })
+    }
 
     router.push('/auth/login');
   }

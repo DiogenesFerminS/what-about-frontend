@@ -4,44 +4,99 @@ import { OpinionData } from "@/interfaces/opinions/opinionData.interface";
 import { cookies } from "next/headers";
 
 export class OpinionsService {
-  static async getAllOpinions({limit, page}: Pagination): Promise<ServiceResponse<OpinionData>> {
+  static async getOpinions({
+    limit = 10,
+    page,
+  }: Pagination): Promise<ServiceResponse<OpinionData>> {
     const token = await this.getToken();
 
-    if(!token) {
-        return {
-          success:false,
-          statusCode: 401,
-          error: "Unauthorized user "
-        }
+    if (!token) {
+      return {
+        success: false,
+        statusCode: 401,
+        error: "Unauthorized user",
+      };
     }
 
     try {
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/opinions?limit=${limit}&page=${page}`, {
-          method: 'GET',
+      const resp = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/opinions?limit=${limit}&page=${page}`,
+        {
+          method: "GET",
           headers: {
             "Cookie": `auth-token=${token}`,
             "Content-Type": "application/json",
           },
-        //   next: {revalidate: 300},
-        cache: "no-store"
-        });
-
-        const res:{MessageChannel: string, ok: boolean, data: OpinionData} = await resp.json();
-        return {
-            success: true,
-            statusCode: 200,
-            data: res.data
+          //   next: {revalidate: 300},
+          cache: "no-store",
         }
+      );
+
+      const res: { MessageChannel: string; ok: boolean; data: OpinionData } =
+        await resp.json();
+      return {
+        success: true,
+        statusCode: 200,
+        data: res.data,
+      };
     } catch (error) {
-        console.error("Connection failed:", error);
+      console.error("Connection failed:", error);
 
-        return {
-            statusCode: 503,
-            error: "Connection failed",
-            success: false,
-        }
+      return {
+        statusCode: 503,
+        error: "Connection failed",
+        success: false,
+      };
     }
-    
+  }
+  static async getOpinionsByUser(
+    { limit = 10, page }: Pagination,
+    userId: string
+  ): Promise<ServiceResponse<OpinionData>> {
+    const token = await this.getToken();
+
+    if (!token) {
+      return {
+        success: false,
+        statusCode: 401,
+        error: "Unauthorized user",
+      };
+    }
+    try {
+      const resp = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/opinions/user/${userId}?limit=${limit}&page=${page}`,
+        {
+          method: "GET",
+          headers: {
+            "Cookie": `auth-token=${token}`,
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+        }
+      );
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        return {
+          success: false,
+          statusCode: 400,
+          error: "Request failed",
+        };
+      }
+
+      return {
+        success: true,
+        statusCode: 200,
+        data: data.data,
+      };
+    } catch {
+      return {
+        success: false,
+        statusCode: 400,
+        error: "Request failed",
+      }
+    }
   }
 
   private static async getToken() {
@@ -49,6 +104,5 @@ export class OpinionsService {
     const token = cookieStore.get("auth-token")?.value;
 
     return token;
-    
   }
 }

@@ -121,3 +121,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+
+@theme {
+
+  --animate-like-bump: like-bump 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+
+  @keyframes like-bump {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.25);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  }
+
+}

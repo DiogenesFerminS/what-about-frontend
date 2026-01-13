@@ -8,15 +8,18 @@ export interface Opinion {
     email: string,
     id: string,
     name: string,
-    username: string
+    username: string,
+    avatarUrl: string,
   }
+  likesCount: number,
+	isLiked: boolean,
 }
 
 export interface OpinionData {
   data: Opinion[];
   meta: {
-    lastPage: number,
     page: number,
-    total: number,
+    limit: number,
+    total?: number,
   };
 }

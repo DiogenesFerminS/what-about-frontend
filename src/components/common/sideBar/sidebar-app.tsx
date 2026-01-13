@@ -1,27 +1,28 @@
 import { House, Pen, Telescope, User } from "lucide-react"
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu } from "../../ui/sidebar"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu } from "../../ui/sidebar"
 import SideBarItem from "./sidebar-item"
+import { FieldSeparator } from "@/components/ui/field"
 
 const options = [
     {
       name: "For you",
       href: "/wa/for-you",
-      icon: <House/> 
+      icon: <House strokeWidth={1.2}/> 
     },
     {
         name: "Explore",
         href: "/wa/explore",
-        icon: <Telescope/> 
+        icon: <Telescope strokeWidth={1.2}/> 
     },
     {
         name: "Followed",
         href: "/wa/followed",
-        icon: <User/>
+        icon: <User strokeWidth={1.2}/>
     },
     {
       name: "Make Opinion",
       href: "/wa/make",
-      icon: <Pen/>
+      icon: <Pen strokeWidth={1.2}/>
     }
 ]
 
@@ -29,13 +30,16 @@ export const AppSideBar = () => {
 
   return (
     <Sidebar>
-      <SidebarHeader>
-        <span className="text-xl">What About?</span>
-        <span className="text-sm text-violet-600">By diogenes fermin</span>
+      <SidebarHeader className="pt-12">
+        <div className="flex flex-col gap-2 py-3 justify-center items-center">
+          <span className="text-xl font-bold text-center">What About?</span>
+          <span className="text-sm text-violet-600 font-bold text-center">By diogenes fermin</span>
+        </div>
+        
       </SidebarHeader>
+      <FieldSeparator/>
       <SidebarContent>
         <SidebarGroup />
-          <SidebarGroupLabel>Features</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {

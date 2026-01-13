@@ -5,7 +5,7 @@ import { Input } from "../ui/input"
 import { useState } from "react"
 import { Button } from "../ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { type RegisterForm, registerSchema } from "@/lib/schemas/register.schema"
+import { type RegisterForm, registerSchema } from "@/schemas/auth/register.schema"
 import { toast } from "sonner"
 
 const RegisterForm = () => {

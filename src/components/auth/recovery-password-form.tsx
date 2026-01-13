@@ -2,7 +2,7 @@
 import {
   type RecoveryForm,
   recoverySchema,
-} from "@/lib/schemas/recovery-password.schema";
+} from "@/schemas/auth/recovery-password.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";

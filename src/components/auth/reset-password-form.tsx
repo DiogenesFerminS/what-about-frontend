@@ -3,7 +3,7 @@
 import {
   type ResetForm,
   resetPasswordSchema,
-} from "@/lib/schemas/reset-password.schema";
+} from "@/schemas/auth/reset-password.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "../ui/field";

@@ -11,9 +11,10 @@ import {
 import { Input } from "../ui/input";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { type LoginForm, loginSchema } from "@/lib/schemas/login.schema";
+import { type LoginForm, loginSchema } from "@/schemas/auth/login.schema";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useAuthContext } from "@/context/auth/auth-context";
 
 const LoginForm = () => {
   const form = useForm<LoginForm>({
@@ -25,6 +26,7 @@ const LoginForm = () => {
   });
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const {checkAuth} = useAuthContext();
   const router = useRouter();
 
   const onSubmit = async (data: LoginForm) => {
@@ -56,6 +58,7 @@ const LoginForm = () => {
         return;
       }
 
+      checkAuth();
       router.push("/wa");
     } catch{
       toast.error('Something is wrong', {
