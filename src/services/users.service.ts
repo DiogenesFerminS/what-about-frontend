@@ -41,8 +41,7 @@ export class UsersService {
         statusCode: 200,
         data: data.data
       }
-    } catch (error) {
-      console.error("Error conectando al backend:", error);
+    } catch {
       return {
         success: false,
         statusCode: 400,
@@ -96,6 +95,51 @@ export class UsersService {
           statusCode: 400,
           error: 'Request failed'
         }
+    }
+  };
+
+  updateProfileUser = async(data: FormData): Promise<ServiceResponse<User>> => {
+    const token = await this.getToken();
+
+    if(!token) {
+      return {
+        statusCode: 401,
+        success: false,
+        error: 'Unauthorized User'
+      };
+    };
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/update-profile`, {
+        method: "PATCH",
+        headers: {
+            Cookie: `auth-token=${token}`,
+          },
+        body: data,
+      });
+      
+      if (!response.ok) {
+        return {
+          statusCode: 400,
+          success: false,
+          error: "The update failed"
+        }
+      };
+
+      const resp = await response.json();
+      console.log(resp);
+
+      return {
+        statusCode: 200,
+        success: true,
+        data: resp.data,
+      };
+    } catch {
+      return {
+        statusCode: 500,
+        success: false,
+        error: 'Request failed'
+      }
     }
   };
 

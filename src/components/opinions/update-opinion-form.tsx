@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Controller, useForm } from "react-hook-form";
@@ -9,43 +9,57 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { CirclePlus } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  type CreateOpinionForm,
-  createOpinionSchema,
-} from "@/schemas/opinions/create-opinion.schema";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { useModalContext } from "@/context/modal/modal-context";
 import { toast } from "sonner";
-import { createOpinionAction } from "@/actions/opinions/createOpinion";
+import { Opinion } from "@/interfaces/opinions/opinionData.interface";
+import { type UpdateOpinionForm, updateOpinionSchema } from "@/schemas/opinions/update-opinion.schema";
+import { updateOpinionAction } from "@/actions/opinions";
 
-const MakeOpinionForm = () => {
-  const form = useForm<CreateOpinionForm>({
+interface Props {
+  opinion: Opinion
+}
+
+const UpdateOpinionForm = ({opinion}: Props) => {
+  const form = useForm<UpdateOpinionForm>({
     defaultValues: {
-      content: "",
+      content: opinion.content,
       file: undefined,
+      deleteImage: undefined,
     },
-    resolver: zodResolver(createOpinionSchema),
+    resolver: zodResolver(updateOpinionSchema),
   });
 
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(opinion.imageUrl);
   const [loading, setLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { openModal, closeModal } = useModalContext();
 
   const router = useRouter();
 
-  const onSubmit = async (data: CreateOpinionForm) => {
+  useEffect(() => {
+    return () => {
+      if (previewUrl && previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  const onSubmit = async (data: UpdateOpinionForm) => {
     setLoading(true);
     const formData = new FormData();
 
     formData.append("content", data.content );
+    if (data.deleteImage !== undefined) {
+      formData.append("deleteImage", String(data.deleteImage));
+    }
 
     if (data.file) {
       formData.append("file", data.file);
     };
 
-    const {success, error} = await createOpinionAction(formData);
+    const {success, error} = await updateOpinionAction(formData, opinion.id);
 
     if(!success && error) {
       toast.error(error, {
@@ -57,18 +71,19 @@ const MakeOpinionForm = () => {
       return;
     }
 
-    toast.success('Opinion created', {
+    toast.success('Opinion updated', {
       position: 'top-right',
       duration: 3000,
     });
     setLoading(false);
 
-    router.push('/wa/explore');
+    router.push(`/wa/profile/${opinion.user.id}`);
   };
 
   const resetPhoto = () => {
     setPreviewUrl(null);
     form.setValue("file", undefined);
+    form.setValue("deleteImage", true);
   };
 
   const changeFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +99,7 @@ const MakeOpinionForm = () => {
     const objectUrl = URL.createObjectURL(file);
     setPreviewUrl(objectUrl);
     form.setValue("file", file);
+    form.setValue("deleteImage", false);
     (event.target as HTMLInputElement).value = "";
   };
 
@@ -201,7 +217,7 @@ const MakeOpinionForm = () => {
             type="submit"
             disabled={loading}
           >
-              Share opinion
+              Update opinion
           </Button>
           {previewUrl && (
             <Button 
@@ -219,4 +235,4 @@ const MakeOpinionForm = () => {
   );
 };
 
-export default MakeOpinionForm;
+export default UpdateOpinionForm;

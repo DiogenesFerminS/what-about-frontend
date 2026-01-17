@@ -21,7 +21,7 @@ const options = [
     },
     {
       name: "Make Opinion",
-      href: "/wa/make",
+      href: "/wa/opinions/make",
       icon: <Pen strokeWidth={1.2}/>
     }
 ]

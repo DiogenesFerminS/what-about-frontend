@@ -1,10 +1,10 @@
 import loadOpinionsByUser from "@/actions/opinions/loadOpinionsByUser";
 import Feed from "@/components/common/feed/feed";
-import { Button } from "@/components/ui/button";
+import ErrorHandler from "@/components/common/others/errorhandler";
+import ActionsButtons from "@/components/profile/actions-buttons";
 import { OpinionsService } from "@/services/opinions.service";
 import { UsersService } from "@/services/users.service";
 import Image from "next/image";
-import Link from "next/link";
 
 interface Props {
     params: Promise<{id: string}>
@@ -12,7 +12,7 @@ interface Props {
 const ProfilePage = async ({params} : Props) => {
   const {id} = await params;
   const userService = new UsersService();
-  const {data:user} = await userService.getUserById(id);
+  const {data:user, error, success} = await userService.getUserById(id);
 
   const {data} = await OpinionsService.getOpinionsByUser({limit: 10, page: 1}, id);
 
@@ -22,15 +22,13 @@ const ProfilePage = async ({params} : Props) => {
   };
 
   if(!user) {
-    return (
-      <div className="w-full h-full flex flex-col gap-3 justify-center items-center">
-        <h1 className="text-2xl font-bold capitalize">Profile not found :(</h1>
-        <Link href={'/wa/explore'} className="underline">Go to Explore</Link>
-      </div>
-    )
+    return (<ErrorHandler errorMessage={'Profile not found :('}/>)
   }
 
-  const isMyProfile = true;
+  if(!success && error) {
+    return (<ErrorHandler errorMessage={error}/>)
+  }
+
 
   return (
     <>
@@ -78,18 +76,7 @@ const ProfilePage = async ({params} : Props) => {
           </div>
         </div>
         <div className="mt-5 w-full">
-          {isMyProfile ? (
-            <div className="flex gap-4 px-3">
-              <Button className="flex-1">Update Profile</Button>
-              <Button variant={"destructive"} className="flex-1">
-                Logout
-              </Button>
-            </div>
-          ) : (
-            <div>
-              <Button className="mx-auto block w-80">Follow</Button>
-            </div>
-          )}
+            <ActionsButtons userId={id}/>
         </div>
       </div>
       <div className="px-2">

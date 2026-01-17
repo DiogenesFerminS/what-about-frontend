@@ -11,6 +11,7 @@ interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+
 const ConfirmPage = async ({ searchParams }: Props) => {
   const { token } = await searchParams;
 

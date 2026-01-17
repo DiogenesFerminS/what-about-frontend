@@ -43,11 +43,16 @@ const Feed = ({initalData, fetchMoreData}: {initalData: Opinion[], fetchMoreData
     }
   }, [inView, loadNewOpinions, hasMore]);
 
+
+  const onDeleteOpinion = (id: string) => {
+    setOpinions((prev) => prev.filter((op) => op.id !== id));
+  }
+
   return (
     <div className="mx-auto flex flex-col justify-start w-full lg:max-w-6/12 sm:max-w-110 ">
         {
             opinions.map((opinion) => (
-                <FeedCard {...opinion} key={opinion.id}/>
+                <FeedCard opinion={opinion} key={opinion.id} onDeleteOpinion={onDeleteOpinion}/>
             ))
         }
 

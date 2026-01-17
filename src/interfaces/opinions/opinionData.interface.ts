@@ -23,3 +23,14 @@ export interface OpinionData {
     total?: number,
   };
 }
+
+export interface SimpleOpinion {
+  content: string;
+  createdAt: Date,
+  deletedAt: Date | null,
+  id: string,
+  imageUrl: string | null,
+  isEdited: boolean,
+  updatedAt: Date,
+  user: {id: string}
+};

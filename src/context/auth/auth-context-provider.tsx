@@ -24,6 +24,10 @@ export const AuthProvider = ({ children }: Props) => {
 
   const router = useRouter();
 
+  const updateUser = (user: User) => {
+    setUser(user);
+  }
+
   const checkAuth = useCallback( async () => {
     setLoading(true);
     try {
@@ -87,6 +91,6 @@ export const AuthProvider = ({ children }: Props) => {
 
 
   return (
-    <AuthContext.Provider value={{ user, error, loading, logout, checkAuth }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, error, loading, logout, checkAuth, updateUser }}>{children}</AuthContext.Provider>
   );
 };

@@ -1,6 +1,6 @@
 import z from "zod/v4";
 
-export const createOpinionSchema = z.object({
+export const updateOpinionSchema = z.object({
   content: z
         .string()
         .nonempty('You cannot post an empty opinion')
@@ -14,6 +14,7 @@ export const createOpinionSchema = z.object({
       "Only .jpg, .png o .webp format"
     )
     .optional(),
+    deleteImage: z.boolean().optional(),
 })
 
-export type CreateOpinionForm = z.infer<typeof createOpinionSchema>;
+export type UpdateOpinionForm = z.infer<typeof updateOpinionSchema>;

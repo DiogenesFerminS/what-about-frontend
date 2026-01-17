@@ -2,14 +2,14 @@ export interface User {
     id:                 string;
     email:              string;
     username:           string;
-    name:               string;
-    bio:                string;
-    avatarUrl:          null;
-    location:           string;
+    name:               string | null;
+    bio:                string | null;
+    avatarUrl:          string | null;
+    location:           string | null;
     isVerified:         boolean;
     isActive:           boolean;
-    verifyToken:        null;
-    resetPasswordToken: null;
+    verifyToken:        string | null;
+    resetPasswordToken: string | null;
     createdAt:          Date;
     updatedAt:          Date;
 }
