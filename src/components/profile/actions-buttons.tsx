@@ -4,7 +4,7 @@ import { useAuthContext } from "@/context/auth/auth-context"
 import { Button } from "../ui/button"
 import { Spinner } from "../ui/spinner"
 import { useRouter } from "next/navigation"
-
+import FollowButton from "./follow-button"
 interface Props {
   userId: string
 }
@@ -45,9 +45,7 @@ const ActionsButtons = ({userId}: Props) => {
           </Button>
         </div>
       ) : (
-        <div>
-          <Button className="mx-auto block w-80">Follow</Button>
-        </div>
+        <FollowButton userId={userId}/>
       )}
     </>
   );           

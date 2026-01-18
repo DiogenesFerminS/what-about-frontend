@@ -2,6 +2,7 @@ import loadOpinionsByUser from "@/actions/opinions/loadOpinionsByUser";
 import Feed from "@/components/common/feed/feed";
 import ErrorHandler from "@/components/common/others/errorhandler";
 import ActionsButtons from "@/components/profile/actions-buttons";
+import { FollowsService } from "@/services/follows.service";
 import { OpinionsService } from "@/services/opinions.service";
 import { UsersService } from "@/services/users.service";
 import Image from "next/image";
@@ -15,6 +16,8 @@ const ProfilePage = async ({params} : Props) => {
   const {data:user, error, success} = await userService.getUserById(id);
 
   const {data} = await OpinionsService.getOpinionsByUser({limit: 10, page: 1}, id);
+
+  const {data: followStats} = await FollowsService.getFollowStats(id);
 
   const wrappedFnLoad = async (page: number) => {
     "use server"
@@ -61,13 +64,13 @@ const ProfilePage = async ({params} : Props) => {
 
             <div className="flex gap-4">
               <p>
-                <span className="font-bold">{data?.meta.total ?? 10}</span> opinions
+                <span className="font-bold">{data?.meta.total ?? 0}</span> opinions
               </p>
               <p>
-                <span className="font-bold">190</span> followers
+                <span className="font-bold">{followStats?.followers ?? 0}</span> followers
               </p>
               <p>
-                <span className="font-bold">390</span> follow
+                <span className="font-bold">{followStats?.following ?? 0}</span> follow
               </p>
             </div>
 
