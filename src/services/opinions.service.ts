@@ -99,6 +99,59 @@ export class OpinionsService {
     }
   }
 
+  static async getFollowOpinions({
+    limit = 10,
+    page,
+  }: Pagination): Promise<ServiceResponse<OpinionData>> {
+    const token = await this.getToken();
+
+    if (!token) {
+      return {
+        success: false,
+        statusCode: 401,
+        error: "Unauthorized user",
+      };
+    }
+
+    try {
+      const resp = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/opinions/follow-opinions?limit=${limit}&page=${page}`,
+        {
+          method: "GET",
+          headers: {
+            "Cookie": `auth-token=${token}`,
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+        }
+      );
+
+      const {ok, data} = await resp.json();
+
+      if (!ok) {
+        return {
+          success: false,
+          statusCode: resp.status,
+          error: "Request failed",
+        };
+      }
+
+      return {
+        success: true,
+        statusCode: 200,
+        data: data as OpinionData,
+      };
+    } catch (error) {
+      console.error("Connection failed:", error);
+
+      return {
+        statusCode: 503,
+        error: "Connection failed",
+        success: false,
+      };
+    }
+  }
+
   static createOpinion = async(formData: FormData): Promise<ServiceResponse<SimpleOpinion>> => {
     const token = await this.getToken();
 
