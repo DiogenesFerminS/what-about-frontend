@@ -1,10 +1,6 @@
 "use client"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Opinion } from "@/interfaces/opinions/opinionData.interface";
-import { Comment } from "@/interfaces/comments/commentData.interface";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { useModalContext } from "@/context/modal/modal-context";
 import LikeButton from "./like-button";
 import { formatDate } from "@/helpers/formatDateSmart";
 import { useAuthContext } from "@/context/auth/auth-context";
@@ -13,10 +9,11 @@ import { useState } from "react";
 import DeleteModal from "./complementary/deleteModal";
 import { deleteOpinionAction } from "@/actions/opinions";
 import { toast } from "sonner";
-import { getCommentsByOpinionAction } from "@/actions/comments";
 import { FieldSeparator } from "@/components/ui/field";
 import CommentsList from "./complementary/comments/commentsList";
-import CustomHeader from "./complementary/cardhead/custom-header";
+import CustomHeader from "./complementary/card/custom-header";
+import CustomCardBody from "./complementary/card/custom-body";
+import useComments from "@/hooks/comments/useComments";
 
 interface Props {
   opinion: Opinion,
@@ -32,36 +29,15 @@ const FeedCard = ({ opinion, onDeleteOpinion }: Props) => {
 
   const { user } = useAuthContext();
 
-  const { openModal, closeModal } = useModalContext();
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
-  const [comments, setComments] = useState<Comment[]>([]);
   const [showComments, setShowComments] = useState<boolean>(false);
+
+  const {addComment, comments, loadComments, loadMoreComments, notMore, isLoading} = useComments(opinion.id);
+  
 
   const opinionDate = formatDate(opinion.createdAt);
 
-  const openModalPreview = () => {
-    if (!opinion.imageUrl) {
-      return null;
-    }
-
-    openModal(
-      <div className="flex flex-col relative w-full h-full">
-        <Image
-          src={opinion.imageUrl}
-          alt="Imagen post"
-          fill
-          className="object-contain p-1 rounded-lg"
-          sizes="100%"
-        />
-
-        <Button
-          className="absolute top-0 right-0" variant={"ghost"}
-          onClick={() => closeModal()}
-        >X</Button>
-      </div>
-    )
-  }
 
   const handleDeleteOpinion = async () => {
     const resp = await deleteOpinionAction(opinion.id);
@@ -87,29 +63,14 @@ const FeedCard = ({ opinion, onDeleteOpinion }: Props) => {
 
   const isMyOpinion = id === user?.id;
 
-  const loadComments = async () => {
-    const { success, data, error } = await getCommentsByOpinionAction(opinion.id, 1);
-
-    if (!success && error) {
-      toast.error(error, {
-        position: 'top-right',
-        duration: 3000,
-      });
-
-      return;
-    };
-
-    if (!data) {
-      toast.error('Something went wrong', {
-        position: 'top-right',
-        duration: 3000,
-      })
-      return;
+  const handleShowComments = () => {
+    if(!showComments && comments.length === 0) {
+      loadComments(1);
     }
 
-    setComments(data.data);
     setShowComments(!showComments);
   }
+
 
   return (
     <>
@@ -135,21 +96,7 @@ const FeedCard = ({ opinion, onDeleteOpinion }: Props) => {
           </CardHeader>
 
           <CardContent>
-            <div>
-              <p>{opinion.content}</p>
-            </div>
-            {opinion.imageUrl && (
-              <div className="relative w-full aspect-video rounded-xl overflow-hidden border bg-muted mt-3">
-                <Image
-                  onClick={openModalPreview}
-                  src={opinion.imageUrl}
-                  alt="Image post"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
-                />
-              </div>
-            )}
+            <CustomCardBody opinion={opinion}/>
           </CardContent>
           <CardFooter>
             <div className="w-full flex flex-col">
@@ -164,7 +111,7 @@ const FeedCard = ({ opinion, onDeleteOpinion }: Props) => {
                     opinionId={opinion.id}
                   />
 
-                  <MessageSquare onClick={loadComments} />
+                  <MessageSquare onClick={handleShowComments} />
                 </div>
                 <div>
                   <span className="text-violet-400 text-sm capitalize">
@@ -172,7 +119,16 @@ const FeedCard = ({ opinion, onDeleteOpinion }: Props) => {
                   </span>
                 </div>
               </div>
-              {showComments && <CommentsList comments={comments} />}
+              {showComments &&
+                <CommentsList 
+                  comments={comments} 
+                  opinionId={opinion.id} 
+                  addComment={addComment} 
+                  loadMoreComments={loadMoreComments}
+                  notMore={notMore}
+                  isLoading={isLoading}
+                />
+              }
             </div>
 
           </CardFooter>

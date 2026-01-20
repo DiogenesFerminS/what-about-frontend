@@ -133,6 +133,30 @@
   }
 }
 
+@layer utilities {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px; /* Para scroll horizontal */
+  }
+
+  /* Color del fondo (track) */
+  ::-webkit-scrollbar-track {
+    background: transparent; 
+  }
+
+  /* Color de la "pastilla" (thumb) */
+  ::-webkit-scrollbar-thumb {
+    background-color: oklch(81.1% 0.111 293.571); 
+    border-radius: 4px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  /* Hover de la pastilla */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(70.2% 0.183 293.541); 
+  }
+}
+
 
 @theme {
 
