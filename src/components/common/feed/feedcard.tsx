@@ -4,23 +4,21 @@ import { Opinion } from "@/interfaces/opinions/opinionData.interface";
 import LikeButton from "./like-button";
 import { formatDate } from "@/helpers/formatDateSmart";
 import { useAuthContext } from "@/context/auth/auth-context";
-import { MessageSquare } from "lucide-react";
 import { useState } from "react";
-import DeleteModal from "./complementary/deleteModal";
-import { deleteOpinionAction } from "@/actions/opinions";
-import { toast } from "sonner";
 import { FieldSeparator } from "@/components/ui/field";
 import CommentsList from "./complementary/comments/commentsList";
 import CustomHeader from "./complementary/card/custom-header";
 import CustomCardBody from "./complementary/card/custom-body";
 import useComments from "@/hooks/comments/useComments";
+import CommentsButtons from "./complementary/card/buttons/comments-buttons";
 
 interface Props {
   opinion: Opinion,
   onDeleteOpinion: (id: string) => void;
+  isDeleted: boolean;
 }
 
-const FeedCard = ({ opinion, onDeleteOpinion }: Props) => {
+const FeedCard = ({ opinion, onDeleteOpinion, isDeleted }: Props) => {
   const {
     user: { id },
     isLiked,
@@ -30,57 +28,37 @@ const FeedCard = ({ opinion, onDeleteOpinion }: Props) => {
   const { user } = useAuthContext();
 
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [isVisible, setIsVisible] = useState<boolean>(true);
   const [showComments, setShowComments] = useState<boolean>(false);
 
-  const {addComment, comments, loadComments, loadMoreComments, notMore, isLoading} = useComments(opinion.id);
+  const { 
+    addComment, 
+    comments, 
+    loadMoreComments, 
+    notMore, 
+    isLoading, 
+    commentsCount, 
+    deleteComment,
+    loadCommentsFirstTime
+  } = useComments(opinion.id);
   
-
   const opinionDate = formatDate(opinion.createdAt);
-
-
-  const handleDeleteOpinion = async () => {
-    const resp = await deleteOpinionAction(opinion.id);
-    const { success, error } = resp;
-    if (!success && error) {
-      toast.error(error, {
-        position: 'top-right',
-        duration: 3000,
-      });
-      return
-    }
-
-    setIsVisible(false);
-
-    setTimeout(() => {
-      onDeleteOpinion(opinion.id);
-      toast.success('Opinion successfully removed', {
-        position: 'top-right',
-        duration: 3000,
-      });
-    }, 2000)
-  }
-
   const isMyOpinion = id === user?.id;
 
   const handleShowComments = () => {
     if(!showComments && comments.length === 0) {
-      loadComments(1);
+      loadCommentsFirstTime()
     }
-
     setShowComments(!showComments);
   }
 
-
   return (
     <>
-      <DeleteModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} handleDeleteOpinion={handleDeleteOpinion} />
       <div
         className={`
         transition-all duration-500 ease-in-out overflow-hidden
-        ${isVisible
-            ? "opacity-100 max-h-250 mb-4 scale-100 translate-x-0"
-            : "opacity-0 max-h-0 mb-0 scale-95 -translate-x-10"
+        ${isDeleted 
+            ? "opacity-0 max-h-0 mb-0 scale-95 -translate-x-10"
+            : "opacity-100 max-h-270 mb-4 scale-100 translate-x-0"
           }
       `}
       >
@@ -92,6 +70,8 @@ const FeedCard = ({ opinion, onDeleteOpinion }: Props) => {
               opinion={opinion} 
               setDeleteModal={setDeleteModal} 
               key={opinion.id} 
+              deleteModal={deleteModal}
+              onDeleteOpinion={onDeleteOpinion}
             />
           </CardHeader>
 
@@ -111,7 +91,10 @@ const FeedCard = ({ opinion, onDeleteOpinion }: Props) => {
                     opinionId={opinion.id}
                   />
 
-                  <MessageSquare onClick={handleShowComments} />
+                  <CommentsButtons
+                    handleShowComments={handleShowComments}
+                    commentsCount={commentsCount}
+                  />
                 </div>
                 <div>
                   <span className="text-violet-400 text-sm capitalize">
@@ -127,6 +110,7 @@ const FeedCard = ({ opinion, onDeleteOpinion }: Props) => {
                   loadMoreComments={loadMoreComments}
                   notMore={notMore}
                   isLoading={isLoading}
+                  deleteComment={deleteComment}
                 />
               }
             </div>

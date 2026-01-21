@@ -173,6 +173,64 @@ export class CommentsService {
     }
   }
 
+  static async getCommentsCountByOpinionId(opinionId: string): Promise<ServiceResponse<{ count: number }>> {
+    const token = await this.getToken();
+
+    if (!token) {
+      return {
+        success: false,
+        statusCode: 401,
+        error: "Unauthorized user",
+      };
+    }
+
+    try {
+      const resp = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/comments/count/opinion/${opinionId}`,
+        {
+          method: "GET",
+          headers: {
+            "Cookie": `auth-token=${token}`,
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+        }
+      );
+
+      if (!resp.ok) {
+        return {
+          statusCode: resp.status,
+          success: false,
+          error: "Request failed",
+        };
+      }
+
+      const { ok, data } = await resp.json();
+
+      if (!ok) {
+        return {
+          success: false,
+          statusCode: 400,
+          error: "Request failed",
+        };
+      }
+
+      return {
+        success: true,
+        statusCode: 200,
+        data: data,
+      };
+    } catch (error) {
+      console.error("Connection failed:", error);
+
+      return {
+        statusCode: 503,
+        error: "Connection failed",
+        success: false,
+      };
+    }
+  }
+
   private static async getToken() {
     const cookieStore = await cookies();
     const token = cookieStore.get("auth-token")?.value;

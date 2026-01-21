@@ -12,7 +12,6 @@ import { createCommentAction } from "@/actions/comments";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
-
 interface Props {
     comments: Comment[];
     opinionId: string;
@@ -20,9 +19,10 @@ interface Props {
     loadMoreComments: () => void;
     notMore: boolean
     isLoading: boolean
+    deleteComment: (id: string) => void;
 }
 
-const CommentsList = ({ comments, opinionId, addComment, loadMoreComments, notMore, isLoading }: Props) => {
+const CommentsList = ({ comments, opinionId, addComment, loadMoreComments, notMore, isLoading, deleteComment }: Props) => {
     const form = useForm<CreateCommentForm>({
         defaultValues: {
             content: ''
@@ -71,7 +71,14 @@ const CommentsList = ({ comments, opinionId, addComment, loadMoreComments, notMo
         setJustAddedComment(true);
     };
 
-    //TODO: MANGE LOADING FIRST COMMENTS
+    if (comments.length === 0 && isLoading) {
+        return (
+            <div className="w-full flex justify-center">
+                <Spinner className="size-8 text-violet-600"/>
+            </div>
+        )
+    }
+
     return (
         <div className="mt-3 flex flex-col gap-2">
             {
@@ -79,21 +86,14 @@ const CommentsList = ({ comments, opinionId, addComment, loadMoreComments, notMo
                     ? (
                         <div
                             ref={listRef}
-                            className="max-h-105 overflow-y-scroll scrollbar-track-violet-600"
+                            className="max-h-70 overflow-y-scroll scrollbar-track-violet-600"
                         >
                             {comments.map((comment) => (
-                                <CommentItem key={comment.id} comment={comment} />
+                                <CommentItem key={comment.id} comment={comment} deleteComment={deleteComment} />
                             ))}
 
                             {
-                                isLoading 
-                                ?(
-                                    <div className="w-full flex justify-center">
-                                        <Spinner className="text-violet-600 size-6"/>
-                                    </div>
-                                )
-                                :(
-                                    notMore
+                                notMore
                                     ? (
                                         <div
                                             className="mt-2"
@@ -109,8 +109,7 @@ const CommentsList = ({ comments, opinionId, addComment, loadMoreComments, notMo
                                             <span className="text-center block text-sm text-gray-300 hover:underline">load more comments</span>
                                         </div>
                                     )
-                                )
-                                
+
                             }
                         </div>
 
@@ -131,17 +130,19 @@ const CommentsList = ({ comments, opinionId, addComment, loadMoreComments, notMo
                     render={({ field, fieldState }) => (
                         <Field data-invalid={fieldState.invalid}>
                             <div className="flex gap-2">
-                                <Input
-                                    {...field}
-                                    id={field.name}
-                                    aria-invalid={fieldState.invalid}
-                                    placeholder="Enter your comment"
-                                    autoComplete="off"
-                                    className="w-[80%]"
-                                    maxLength={500}
-                                    disabled={loading}
-                                />
-                                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                <div className="flex flex-col w-[80%]">
+                                    <Input
+                                        {...field}
+                                        id={field.name}
+                                        aria-invalid={fieldState.invalid}
+                                        placeholder="Enter your comment"
+                                        autoComplete="off"
+                                        maxLength={500}
+                                        disabled={loading}
+                                    />
+                                    {fieldState.invalid && <FieldError className="text-center mt-1" errors={[fieldState.error]} />}
+                                </div>
+
                                 <Button
                                     className="flex-1"
                                     disabled={loading}

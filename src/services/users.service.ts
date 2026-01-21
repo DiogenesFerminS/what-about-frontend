@@ -127,7 +127,6 @@ export class UsersService {
       };
 
       const resp = await response.json();
-      console.log(resp);
 
       return {
         statusCode: 200,
