@@ -46,7 +46,7 @@ const UpdatePage = async ({ params }: Props) => {
 
   return (
     <div className="mx-auto flex flex-col justify-center w-full max-w-105 sm:max-w-110 h-full px-2 lg:max-w-150">
-      <Card className="min-w-70 md:min-w-90">
+      <Card className="min-w-70 md:min-w-90 my-2">
         <CardHeader>
           <CardTitle>
             <h1 className="md:text-lg text-[16px]">Update your Opinion</h1>

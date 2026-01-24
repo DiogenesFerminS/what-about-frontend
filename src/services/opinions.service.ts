@@ -280,6 +280,49 @@ export class OpinionsService {
     }
   }
 
+   static findByterm = async(term: string, {limit = 10, page}: Pagination): Promise<ServiceResponse<OpinionData>> => {
+    const token = await this.getToken();
+
+    if(!token) {
+      return {
+        statusCode: 401,
+        success: false,
+        error: 'User Unauthorized',
+      }
+    };
+
+    try {
+      const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/opinions/search?term=${term}&limit=${limit}&page=${page}`, {
+        method: 'GET',
+        headers: {
+          "Cookie": `auth-token=${token}`
+        }
+      });
+
+      if(!resp.ok) {
+        return {
+          statusCode: 400,
+          success: false,
+          error: 'The opinion could not be retrieved.'
+        };
+      };
+
+      const data = await resp.json();
+
+      return {
+        success: true,
+        statusCode: 200,
+        data: data.data,
+      };
+    } catch {
+      return {
+        statusCode: 500,
+        success: false,
+        error: "Request failed, please try later",
+      };
+    }
+  }
+
   static updateOpinion = async (formData: FormData, id: string) => {
     const token = await this.getToken();
 
@@ -299,6 +342,7 @@ export class OpinionsService {
         },
         body: formData,
       });
+
 
       if (!resp.ok) {
         return {

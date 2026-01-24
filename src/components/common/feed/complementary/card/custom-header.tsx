@@ -25,7 +25,7 @@ const CustomHeader = ({ opinion, isMyOpinion, onDeleteOpinion }: Props) => {
       <div className="flex justify-between items-start w-full select-none">
         <div className="flex gap-4">
           <Avatar>
-            <AvatarImage src={avatarUrl} />
+            <AvatarImage src={avatarUrl} alt={username}/>
             <AvatarFallback>
               {username.split("")[0].toUpperCase()}
             </AvatarFallback>

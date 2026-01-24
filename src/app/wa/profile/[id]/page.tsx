@@ -86,7 +86,11 @@ const ProfilePage = async ({params} : Props) => {
         <div className="py-2">
           <span className="font bold text-center mx-auto block text-xl capitalize">Opinions created by {user.username}</span>
         </div>
-          {data ? (<Feed initalData={data?.data} fetchMoreData={wrappedFnLoad}/> )
+          {data ? (
+            <div className="mx-auto flex flex-col justify-start w-full lg:max-w-6/12 sm:max-w-110 px-3 gap-5 py-1">
+              <Feed initalData={data?.data} fetchMoreData={wrappedFnLoad}/> 
+            </div>
+          )
           
           :(<span className="capitalize text-sm mx-auto block text-center py-4 text-red-400">{user.username} does not have opinions :(</span>)}
 

@@ -22,6 +22,7 @@ import { createOpinionAction } from "@/actions/opinions/createOpinion";
 const MakeOpinionForm = () => {
   const form = useForm<CreateOpinionForm>({
     defaultValues: {
+      title: "",
       content: "",
       file: undefined,
     },
@@ -39,17 +40,18 @@ const MakeOpinionForm = () => {
     setLoading(true);
     const formData = new FormData();
 
-    formData.append("content", data.content );
+    formData.append("content", data.content);
+    formData.append("title", data.title);
 
     if (data.file) {
       formData.append("file", data.file);
-    };
+    }
 
-    const {success, error} = await createOpinionAction(formData);
+    const { success, error } = await createOpinionAction(formData);
 
-    if(!success && error) {
+    if (!success && error) {
       toast.error(error, {
-        position: 'top-right',
+        position: "top-right",
         duration: 3000,
       });
 
@@ -57,13 +59,13 @@ const MakeOpinionForm = () => {
       return;
     }
 
-    toast.success('Opinion created', {
-      position: 'top-right',
+    toast.success("Opinion created", {
+      position: "top-right",
       duration: 3000,
     });
     setLoading(false);
 
-    router.push('/wa/explore');
+    router.push("/wa/explore");
   };
 
   const resetPhoto = () => {
@@ -88,16 +90,16 @@ const MakeOpinionForm = () => {
   };
 
   const handleOpenModal = () => {
-    if(!previewUrl) {
-      toast('Something is wrong', {
-        position: 'top-left',
-        duration: 3000
+    if (!previewUrl) {
+      toast("Something is wrong", {
+        position: "top-left",
+        duration: 3000,
       });
-      return null
+      return null;
     }
-    
+
     openModal(
-       <div className="flex flex-col relative w-full h-full">
+      <div className="flex flex-col relative w-full h-full">
         <Image
           src={previewUrl}
           alt="Imagen post"
@@ -106,47 +108,75 @@ const MakeOpinionForm = () => {
           sizes="100%"
         />
 
-        <Button 
-          className="absolute top-0 right-0" variant={"ghost"}
+        <Button
+          className="absolute top-0 right-0"
+          variant={"ghost"}
           onClick={() => closeModal()}
-        >X</Button>
-      </div>
-    )
-  }
+        >
+          X
+        </Button>
+      </div>,
+    );
+  };
 
   return (
     <>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form 
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
         <FieldGroup>
-          <Controller
-            name="content"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Your opinion:</FieldLabel>
-                <div className="relative">
-                  <Textarea
+          <Field>
+            <FieldLabel>Your opinion:</FieldLabel>
+
+            <div className="relative">
+              <Controller
+                name="title"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Input
                     {...field}
                     disabled={loading}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Tell us what you think"
+                    className="border-none rounded-none rounded-tl-lg rounded-tr-lg py-3 font-bold text-lg"
+                    placeholder="Your title"
                     autoComplete="off"
-                    className="min-h-37.5 w-full resize-none"
-                    maxLength={500}
+                    aria-invalid={fieldState.invalid}
                   />
-
-                  <span className="text-xs absolute bottom-0 right-2">{`${
-                    form.getValues("content").length
-                  } / 500`}</span>
-                </div>
-
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
                 )}
-              </Field>
+              />
+
+              <div className="h-px w-full bg-gray-200 dark:bg-gray-800" />
+
+              <Controller
+                name="content"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Textarea
+                      {...field}
+                      disabled={loading}
+                      id="content"
+                      placeholder="Tell us what you think"
+                      autoComplete="off"
+                      className="h-55 w-full resize-none overflow-y-scroll border-none rounded-none rounded-br-lg rounded-bl-lg"
+                      maxLength={2700}
+                      aria-invalid={fieldState.invalid}
+                    />
+
+                    <span className="text-xs absolute bottom-2 right-2 text-violet-500 font-mono bg-white/50 dark:bg-black/50 px-1 rounded">
+                      {`${field.value ? field.value.length : 0} / 2700`}
+                    </span>
+                  </>
+                )}
+              />
+            </div>
+
+            {form.formState.errors.title && (
+              <FieldError errors={[form.formState.errors.title]} />
             )}
-          />
+            {form.formState.errors.content && (
+              <FieldError errors={[form.formState.errors.content]} />
+            )}
+          </Field>
 
           <Controller
             name="file"
@@ -197,16 +227,13 @@ const MakeOpinionForm = () => {
         </FieldGroup>
 
         <div className="flex gap-3 justify-start items-center mt-3">
-          <Button 
-            type="submit"
-            disabled={loading}
-          >
-              Share opinion
+          <Button type="submit" disabled={loading}>
+            Share opinion
           </Button>
           {previewUrl && (
-            <Button 
-              type="button" 
-              variant="destructive" 
+            <Button
+              type="button"
+              variant="destructive"
               onClick={resetPhoto}
               disabled={loading}
             >

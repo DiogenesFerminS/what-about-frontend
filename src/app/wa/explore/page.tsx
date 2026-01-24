@@ -1,10 +1,45 @@
 import loadMoreOpinions from "@/actions/opinions/loadMoreOpinions";
+import { loadOpinionsByTermAction } from "@/actions/opinions/loadOpinionsByTerm";
 import Feed from "@/components/common/feed/feed";
+import SearchBar from "@/components/search/searchBar";
+import { Opinion, OpinionData } from "@/interfaces/opinions/opinionData.interface";
 import { OpinionsService } from "@/services/opinions.service"
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
-const ExplorePage = async () => {
-  const {success, statusCode, data} = await OpinionsService.getOpinions({limit: 10, page: 1});
+
+
+const ExplorePage = async ({ searchParams }: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined}>
+}) => {
+  const search = await searchParams;
+
+  const loadOpinionsByTerm = async(page: number) => {
+    "use server";
+
+    return loadOpinionsByTermAction(search.term as string,page)
+  }
+
+  let success: boolean;
+  let statusCode: number;
+  let data: OpinionData | undefined;
+  let callBackFn: (page:number) => Promise<Opinion[]>;
+
+  if(!search.term || search.term === '') {
+    
+    const response = await OpinionsService.getOpinions({limit: 10, page: 1});
+    success = response.success;
+    statusCode = response.statusCode;
+    data = response.data
+    callBackFn = loadMoreOpinions;
+
+  } else {
+    const response = await OpinionsService.findByterm(search.term as string, {limit: 10, page: 1});
+    success = response.success;
+    statusCode = response.statusCode;
+    data = response.data
+    callBackFn = loadOpinionsByTerm;
+  }
 
   if (!success) {
     if (statusCode === 401) {
@@ -19,18 +54,29 @@ const ExplorePage = async () => {
     );
   }
 
-  if (!data || data.data.length === 0) {
-    return (
-      <div className="text-center p-10 text-red-500">
-        <h2 className="text-xl font-bold">Oops!</h2>
-        <p>Opinions not found. Please try again later - No data</p>
-      </div>
-    )
-  }
-
   return (
-    <div className="px-2">
-      <Feed initalData={data.data} fetchMoreData={loadMoreOpinions}/>
+    <div className="mx-auto flex flex-col justify-start w-full lg:max-w-6/12 sm:max-w-110 px-3 gap-5 py-1 md:border-x border-gray-600 h-full">
+      <SearchBar/>
+      {
+        !data || data.data.length === 0
+        ?(
+          <div className="w-full h-full flex flex-col justify-center items-center gap-2">
+            <span className="text-gray-300 text-center block">No results were found :(</span>
+              <Link
+                href={'/wa/explore'}
+                className="font-bold hover:underline"
+              >Back to explore</Link>
+          </div>
+        )
+
+        :(
+          <Feed
+            key={search.term as string } 
+            initalData={data.data} 
+            fetchMoreData={callBackFn}
+          />
+        )
+      }
     </div>
   )
 }

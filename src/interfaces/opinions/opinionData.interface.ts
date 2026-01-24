@@ -1,6 +1,7 @@
 export interface Opinion {
   content: string,
   createdAt: string,
+  title: string,
   id: string,
   imageUrl: string,
   isEdited: boolean,

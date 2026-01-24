@@ -1,4 +1,4 @@
-import { House, Pen, Telescope, User } from "lucide-react"
+import { House, Pen, Search, User } from "lucide-react"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu } from "../../ui/sidebar"
 import SideBarItem from "./sidebar-item"
 import { FieldSeparator } from "@/components/ui/field"
@@ -12,7 +12,7 @@ const options = [
     {
         name: "Explore",
         href: "/wa/explore",
-        icon: <Telescope strokeWidth={1.2}/> 
+        icon: <Search strokeWidth={1.2}/> 
     },
     {
         name: "Followed",
@@ -23,7 +23,7 @@ const options = [
       name: "Make Opinion",
       href: "/wa/opinions/make",
       icon: <Pen strokeWidth={1.2}/>
-    }
+    },
 ]
 
 export const AppSideBar = () => {

@@ -47,7 +47,7 @@ const Feed = ({ initalData, fetchMoreData }: { initalData: Opinion[], fetchMoreD
   return (
     <>
       <DeleteModal deleteModal={deleteModal} setDeleteModal={setDeleteModal} handleDeleteOpinion={handleDeleteOpinion} />
-      <div className="mx-auto flex flex-col justify-start w-full lg:max-w-6/12 sm:max-w-110 ">
+      <div>
         {
           opinions.map((opinion) => (
             <FeedCard 
