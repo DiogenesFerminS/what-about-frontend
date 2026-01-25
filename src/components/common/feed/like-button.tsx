@@ -66,10 +66,9 @@ const LikeButton = ({initialCountLikes, initialIsLiked, opinionId}: Props) => {
     >
       <Heart 
         className={`transition-transform duration-300 ${
-            // Animación de latido al estar activo
             isLiked ? 'animate-like-bump text-red-600' : 'scale-100'
           }`}
-          // El truco de Lucide: Relleno = color del texto actual
+
           fill={isLiked ? "currentColor" : "none"} 
           strokeWidth={2}
       />

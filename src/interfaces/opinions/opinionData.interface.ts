@@ -5,6 +5,7 @@ export interface Opinion {
   id: string,
   imageUrl: string,
   isEdited: boolean,
+  originalOpinion: Opinion,
   user: {
     email: string,
     id: string,
