@@ -34,7 +34,7 @@ const ProfileMenu = () => {
           onClick={handleProfile}
           className="hover:cursor-pointer"
         >
-            <AvatarImage src={user.avatarUrl ?? ''} />
+            <AvatarImage src={user.avatarUrl ?? ''} alt="Profile avatar"/>
             <AvatarFallback>{user.username.split('')[0].toUpperCase()}</AvatarFallback>
         </Avatar>
     </div>

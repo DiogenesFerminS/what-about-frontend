@@ -12,6 +12,7 @@ const Topbar = () => {
     <div className='bg-sidebar flex justify-between items-center py-2 w-full fixed top-0 z-20 h-12'>
         <div>
             <button 
+                aria-label="open"
                 className="p-1 cursor-pointer"
                 onClick={toggleSidebar}
             >

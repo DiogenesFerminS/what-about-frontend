@@ -11,8 +11,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { UsersService } from "@/services/users.service";
 
 const UpdatePage = async () => {
-  const userService = new UsersService();
-  const { data } = await userService.getUser();
+  const { data } = await UsersService.getUser();
   if( !data) {
     return (
       <div className="w-full h-full flex justify-center items-center">

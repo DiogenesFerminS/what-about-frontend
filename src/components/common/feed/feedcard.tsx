@@ -30,10 +30,10 @@ const FeedCard = ({ opinion, onDeleteOpinion, isDeleted }: Props) => {
     <>
       <div
         className={`
-        transition-all duration-500 ease-in-out overflow-hidden
+        transition-all duration-1000 ease-in-out overflow-hidden
         ${isDeleted 
             ? "opacity-0 max-h-0 mb-0 scale-95 -translate-x-10"
-            : "opacity-100 mb-4 scale-100 translate-x-0"
+            : "opacity-100 mb-4 max-h-330 scale-100 translate-x-0"
           }
       `}
       >
@@ -53,7 +53,7 @@ const FeedCard = ({ opinion, onDeleteOpinion, isDeleted }: Props) => {
             <CustomCardBody opinion={opinion} isRepost={isRepost}/>
           </CardContent>
           <CardFooter>
-            <FooterCard createdAt={opinion.createdAt} initialCountLikes={opinion.likesCount} initialIsLiked={opinion.isLiked} opinionId={opinion.id}/>
+            <FooterCard opinion={opinion}/>
 
           </CardFooter>
 

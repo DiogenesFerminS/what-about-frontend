@@ -44,7 +44,7 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
                 {opinion.originalOpinion.content.length > 300 && (
                   <Link
                     href={`/wa/opinions/${opinion.originalOpinion.id}`}
-                    className="text-violet-400 capitalize hover:underline"
+                    className="text-violet-500 capitalize hover:underline"
                   >
                     ...See more
                   </Link>
@@ -68,7 +68,7 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
               {opinion.content.length > 400 && (
                 <Link
                   href={`/wa/opinions/${opinion.id}`}
-                  className="text-violet-400 capitalize hover:underline"
+                  className="text-violet-500 capitalize hover:underline"
                 >
                   ...See more
                 </Link>

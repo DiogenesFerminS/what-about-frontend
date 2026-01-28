@@ -3,6 +3,7 @@
 import { ThemeProvider } from "@/components/common/theme-provider"
 import { ModalProvider } from "./modal/modal-context-provider"
 import { AuthProvider } from "./auth/auth-context-provider"
+import { OpinionInteractionProvider } from "./opinion/opinion-context-provider"
 
 interface Props {
   children: React.ReactNode
@@ -19,7 +20,9 @@ const Providers = ({children}: Props) => {
     >
       <AuthProvider>
           <ModalProvider>
-            {children}
+            <OpinionInteractionProvider>
+              {children}
+            </OpinionInteractionProvider>
           </ModalProvider>
       </AuthProvider>
 

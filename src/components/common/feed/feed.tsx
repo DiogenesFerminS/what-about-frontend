@@ -1,12 +1,13 @@
 "use client"
 import { Opinion } from "@/interfaces/opinions/opinionData.interface";
-import FeedCard from "./feedcard";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { deleteOpinionAction } from "@/actions/opinions";
 import { toast } from "sonner";
 import DeleteModal from "./complementary/deleteModal";
 import { useFeed } from "@/hooks/feed/useFeed";
+import { useAuthContext } from "@/context/auth/auth-context";
+import SmartCard from "./smart-card";
 
 const Feed = ({ initalData, fetchMoreData }: { initalData: Opinion[], fetchMoreData: (page: number) => Promise<Opinion[]> }) => {
   const { opinions, setOpinions, hasMore, error, ref } = useFeed({ initalData, fetchMoreData });
@@ -14,6 +15,13 @@ const Feed = ({ initalData, fetchMoreData }: { initalData: Opinion[], fetchMoreD
   const [idsDeleting, setIdsDeleting] = useState<Set<string>>(new Set());
   const [deleteModal, setDeleteModal] = useState<boolean>(false);
   const [currentDeleteId, setCurrentDeleteId] = useState<string>('');
+
+  const {user} = useAuthContext();
+  if(!user) return (
+    <div className="w-full h-full flex justify-center items-center">
+      <Spinner className="size-6 text-violet-600"/>
+    </div>
+  )
 
 
   const onDeleteOpinion = (id: string) => {
@@ -50,12 +58,7 @@ const Feed = ({ initalData, fetchMoreData }: { initalData: Opinion[], fetchMoreD
       <div>
         {
           opinions.map((opinion) => (
-            <FeedCard 
-              opinion={opinion} 
-              key={opinion.id} 
-              onDeleteOpinion={onDeleteOpinion} 
-              isDeleted={idsDeleting.has(opinion.id)} 
-            />
+            <SmartCard key={opinion.id} opinion={opinion} currentUserId={user.id} isDeleted={idsDeleting.has(opinion.id)} onDeleteOpinion={onDeleteOpinion}/>
           ))
         }
 

@@ -77,7 +77,7 @@ const useComments = (opinionId: string) => {
 
           const newValidComment = newComment.filter((c) => !existingIds.has(c.id));
 
-          return [...newValidComment, ...prev];
+          return [...prev, ...newValidComment];
         });
         setCommentPage(page);
         setIsLoading(false);

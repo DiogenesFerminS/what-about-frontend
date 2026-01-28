@@ -12,8 +12,7 @@ interface Props {
 }
 const ProfilePage = async ({params} : Props) => {
   const {id} = await params;
-  const userService = new UsersService();
-  const {data:user, error, success} = await userService.getUserById(id);
+  const {data:user, error, success} = await UsersService.getUserById(id);
 
   const {data} = await OpinionsService.getOpinionsByUser({limit: 10, page: 1}, id);
 

@@ -18,11 +18,10 @@ interface Props {
 
 const UpdatePage = async ({ params }: Props) => {
   const { id } = await params;
-  const userService = new UsersService();
 
   const [opinionResponse, userResponse] = await Promise.all([
     OpinionsService.findOneById(id),
-    userService.getUser(),
+    UsersService.getUser(),
   ]);
 
   const { data: opinion, success, error } = opinionResponse;

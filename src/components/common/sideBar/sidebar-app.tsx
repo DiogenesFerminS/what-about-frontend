@@ -33,7 +33,7 @@ export const AppSideBar = () => {
       <SidebarHeader className="pt-12">
         <div className="flex flex-col gap-2 py-3 justify-center items-center">
           <span className="text-xl font-bold text-center">What About?</span>
-          <span className="text-sm text-violet-600 font-bold text-center">By diogenes fermin</span>
+          <span className="text-sm text-violet-400 font-bold text-center">By diogenes fermin</span>
         </div>
         
       </SidebarHeader>

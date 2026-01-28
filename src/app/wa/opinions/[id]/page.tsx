@@ -1,6 +1,7 @@
 import GoBackButton from "@/components/common/feed/complementary/card/buttons/go-back.btn";
 import FooterCard from "@/components/common/feed/complementary/card/footer-card";
 import ImageOpinion from "@/components/common/feed/complementary/card/image-opinion";
+import ErrorHandler from "@/components/common/others/errorhandler";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { OpinionsService } from "@/services/opinions.service";
@@ -12,9 +13,17 @@ interface Props {
 
 const OpinionPage = async ({ params }: Props) => {
   const { id } = await params;
-  const { data: opinion } = await OpinionsService.getAllOneById(id);
+  const { data: opinion, error, success } = await OpinionsService.getAllOneById(id);
 
-  if (!opinion) return;
+  if (!success && error) {
+    <ErrorHandler errorMessage={error}/>
+    return;
+  }
+
+  if(!opinion) {
+    <ErrorHandler errorMessage="Opinion not found"/>
+    return;
+  }
 
   return (
     <div className="w-full h-full px-2 my-5">
@@ -61,10 +70,7 @@ const OpinionPage = async ({ params }: Props) => {
 
         <div className="px-2">
           <FooterCard
-            initialCountLikes={opinion.likesCount}
-            initialIsLiked={opinion.isLiked}
-            opinionId={opinion.id}
-            createdAt={opinion.createdAt}
+            opinion={opinion}
           />
         </div>
       </Card>

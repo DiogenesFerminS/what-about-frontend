@@ -15,6 +15,8 @@ export interface Opinion {
   }
   likesCount: number,
 	isLiked: boolean,
+  isRepostedByMe: boolean
+  repostCount: number
 }
 
 export interface OpinionData {
