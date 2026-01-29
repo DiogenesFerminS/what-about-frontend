@@ -59,7 +59,7 @@ const LoginForm = () => {
       }
 
       checkAuth();
-      router.push("/wa");
+      router.push("/wa/explore");
     } catch{
       toast.error('Something is wrong', {
         description: 'An unexpected error has occurred, please try again later',

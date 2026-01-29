@@ -9,7 +9,7 @@ const AuthLayout = async ({ children }: { children: React.ReactNode}) => {
       <AppSideBar/>
         <Topbar/>
 
-        <main className="w-full dark:bg-stone-950 bg-gray-100 pt-13 relative">
+        <main className="w-full dark:bg-stone-950 bg-gray-100 pt-13 relative min-h-screen">
           {children}
         </main>
 

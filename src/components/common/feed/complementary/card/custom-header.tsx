@@ -5,21 +5,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useFeedContext } from "@/context/feed/feed-context";
 import { Opinion } from "@/interfaces/opinions/opinionData.interface";
 import { Pencil, Settings, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Dispatch, SetStateAction } from "react";
 
 interface Props {
   opinion: Opinion;
   isMyOpinion: boolean;
-  setDeleteModal: Dispatch<SetStateAction<boolean>>;
-  deleteModal: boolean;
-  onDeleteOpinion: (id: string) => void;
 }
 
-const CustomHeader = ({ opinion, isMyOpinion, onDeleteOpinion }: Props) => {
+const CustomHeader = ({ opinion, isMyOpinion }: Props) => {
   const { avatarUrl, username, id, name } = opinion.user;
+
+  const {onDeleteOpinion} = useFeedContext();
 
   const router = useRouter();
   const isRepost = !!opinion.originalOpinion;

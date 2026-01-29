@@ -2,6 +2,7 @@ import loadOpinionsByUser from "@/actions/opinions/loadOpinionsByUser";
 import Feed from "@/components/common/feed/feed";
 import ErrorHandler from "@/components/common/others/errorhandler";
 import ActionsButtons from "@/components/profile/actions-buttons";
+import FeedProvider from "@/context/feed/feed-context-provider";
 import { FollowsService } from "@/services/follows.service";
 import { OpinionsService } from "@/services/opinions.service";
 import { UsersService } from "@/services/users.service";
@@ -87,7 +88,9 @@ const ProfilePage = async ({params} : Props) => {
         </div>
           {data ? (
             <div className="mx-auto flex flex-col justify-start w-full lg:max-w-6/12 sm:max-w-110 px-3 gap-5 py-1">
-              <Feed initalData={data?.data} fetchMoreData={wrappedFnLoad}/> 
+              <FeedProvider initialData={data.data} fetchMoreData={wrappedFnLoad}>
+                <Feed /> 
+              </FeedProvider>
             </div>
           )
           

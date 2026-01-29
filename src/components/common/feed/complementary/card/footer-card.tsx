@@ -1,7 +1,6 @@
 "use client";
 import useComments from "@/hooks/comments/useComments";
 import LikeButton from "../../like-button";
-import { useState } from "react";
 import CommentsList from "../comments/commentsList";
 import { FieldSeparator } from "../../../../ui/field";
 import { formatDate } from "@/helpers/formatDateSmart";
@@ -11,9 +10,8 @@ import { Opinion } from "@/interfaces/opinions/opinionData.interface";
 import { useRouter } from "next/navigation";
 import { deleteRepostAction } from "@/actions/reposts";
 import { toast } from "sonner";
-import { useRepostState } from "@/hooks/opinions/useRepostState";
-import { useOpinionInteraction } from "@/context/opinion/opinion-context-provider";
-
+import useRepostState from "@/hooks/feed/useRepostState";
+import { useState } from "react";
 interface Props {
   opinion: Opinion;
 }
@@ -46,7 +44,6 @@ const FooterCard = ({ opinion }: Props) => {
 
   const {isReposted, toggleRepost, repostCount} = useRepostState(targetId, opinion.isRepostedByMe, opinion.repostCount);
 
-
   const handleShowComments = () => {
     if (!showComments && comments.length === 0) {
       loadCommentsFirstTime();
@@ -57,11 +54,9 @@ const FooterCard = ({ opinion }: Props) => {
   const handleRepost = async () => {
     if(!isReposted){
       router.push(`/wa/repost/${opinion.id}`);
-      toggleRepost(true);
     }else {
       const {success, error} = await deleteRepostAction(targetId)
       toggleRepost(false);
-
       if (!success && error) {
         toast.error(error, {
           duration: 3000,

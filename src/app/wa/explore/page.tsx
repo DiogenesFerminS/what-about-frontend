@@ -2,6 +2,7 @@ import loadMoreOpinions from "@/actions/opinions/loadMoreOpinions";
 import { loadOpinionsByTermAction } from "@/actions/opinions/loadOpinionsByTerm";
 import Feed from "@/components/common/feed/feed";
 import SearchBar from "@/components/search/searchBar";
+import FeedProvider from "@/context/feed/feed-context-provider";
 import { Opinion, OpinionData } from "@/interfaces/opinions/opinionData.interface";
 import { OpinionsService } from "@/services/opinions.service"
 import Link from "next/link";
@@ -70,11 +71,14 @@ const ExplorePage = async ({ searchParams }: {
         )
 
         :(
-          <Feed
-            key={search.term as string } 
-            initalData={data.data} 
-            fetchMoreData={callBackFn}
-          />
+          <FeedProvider 
+            fetchMoreData={callBackFn} 
+            initialData={data.data}
+            key={search.term as string}
+          >
+            <Feed
+            />
+          </FeedProvider>
         )
       }
     </div>

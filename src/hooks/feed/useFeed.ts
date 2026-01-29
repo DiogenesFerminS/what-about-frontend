@@ -3,12 +3,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 interface UseFeedProps {
-  initalData: Opinion[];
+  initialData: Opinion[];
   fetchMoreData: (page: number) => Promise<Opinion[]>;
 }
 
-export const useFeed = ({ initalData, fetchMoreData }: UseFeedProps) => {
-  const [opinions, setOpinions] = useState<Opinion[]>(initalData);
+export const useFeed = ({ initialData, fetchMoreData }: UseFeedProps) => {
+  const [opinions, setOpinions] = useState<Opinion[]>(initialData);
   const [page, setPage] = useState<number>(2);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(false);

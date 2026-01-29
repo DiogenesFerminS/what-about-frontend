@@ -1,8 +1,6 @@
 import { ServiceResponse } from "@/interfaces/common/service-response.interface";
 import { Opinion } from "@/interfaces/opinions/opinionData.interface";
 import { HttpClient } from "./http-client";
-import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 
 export class RepostsService {
   static async createRepost(opinionId:string, title:string, content:string ): Promise<ServiceResponse<Opinion>> {
@@ -11,11 +9,7 @@ export class RepostsService {
         content
     }
 
-    const header = await headers();
-    const path = new URL(header.get('referer') ?? '/').pathname;
-
     const response = HttpClient.punchEndPoint<{title:string, content:string}, Opinion>({body, method: 'POST', url: `/opinions/repost/${opinionId}`});
-    revalidatePath(path, 'page');
     return response; 
   }
 

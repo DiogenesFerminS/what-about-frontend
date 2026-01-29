@@ -13,13 +13,11 @@ const RepostPage = async ({params}:Props) => {
   const { data: opinion, error, success } = await OpinionsService.getAllOneById(id);
 
   if(!success && error) {
-    <ErrorHandler errorMessage={error}/>
-    return;
+    return <ErrorHandler errorMessage={error}/>
   }
 
   if(!opinion) {
-    <ErrorHandler errorMessage="Opinion not found"/>
-    return;
+    return <ErrorHandler errorMessage="Opinion not found"/>
   }
 
 
@@ -59,7 +57,6 @@ const RepostPage = async ({params}:Props) => {
               </div>
             </div>
           </CardHeader>
-
           <RepostOpinionForm opinionId={opinion.id} />
         </Card>
     </div>

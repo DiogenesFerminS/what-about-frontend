@@ -54,6 +54,7 @@ const RepostOpinionForm = ({opinionId}: Props) => {
     });
 
     setTimeout(() => {
+      router.refresh();
       router.back();
 
     },2000)
@@ -128,7 +129,9 @@ const RepostOpinionForm = ({opinionId}: Props) => {
               aria-label="back-button"
               variant={'destructive'}
               type="button"
+              disabled={loading}
               onClick={() => {
+                router.refresh();
                 router.back();
               }}
             >Back</Button>
