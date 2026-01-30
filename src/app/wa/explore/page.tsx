@@ -8,11 +8,11 @@ import { OpinionsService } from "@/services/opinions.service"
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+interface Props {
+  searchParams: Promise<{[Key:string]: string | string[] | undefined}>
+}
 
-
-const ExplorePage = async ({ searchParams }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined}>
-}) => {
+const ExplorePage = async ({ searchParams }: Props) => {
   const search = await searchParams;
 
   const loadOpinionsByTerm = async(page: number) => {

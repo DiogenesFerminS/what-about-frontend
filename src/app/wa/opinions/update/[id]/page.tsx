@@ -14,10 +14,18 @@ import UpdateOpinionForm from "@/components/opinions/update-opinion-form";
 
 interface Props {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{[Key:string]: string | string[] | undefined}>;
 }
 
-const UpdatePage = async ({ params }: Props) => {
+const UpdatePage = async ({ params, searchParams }: Props) => {
   const { id } = await params;
+  const {repost} = await searchParams;
+
+  const allowValues = ['true', 'false'];
+
+  if(repost && !allowValues.includes(repost as string)) {
+    notFound();
+  } 
 
   const [opinionResponse, userResponse] = await Promise.all([
     OpinionsService.findOneById(id),
@@ -56,7 +64,7 @@ const UpdatePage = async ({ params }: Props) => {
         </CardHeader>
         <FieldSeparator />
         <CardContent>
-            <UpdateOpinionForm opinion={opinion}/>
+            <UpdateOpinionForm opinion={opinion} repost={repost}/>
         </CardContent>
       </Card>
     </div>

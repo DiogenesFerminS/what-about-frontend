@@ -22,9 +22,11 @@ import { updateOpinionAction } from "@/actions/opinions";
 
 interface Props {
   opinion: Opinion;
+  repost: string | string[] | undefined;
 }
 
-const UpdateOpinionForm = ({ opinion }: Props) => {
+const UpdateOpinionForm = ({ opinion, repost }: Props) => {
+  const isRepost = repost === "true";
   const form = useForm<UpdateOpinionForm>({
     defaultValues: {
       title: opinion.title,
@@ -138,11 +140,11 @@ const UpdateOpinionForm = ({ opinion }: Props) => {
     );
   };
 
+  const hasChild = !!opinion.originalOpinion;
+
   return (
     <>
-      <form 
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <Field>
             <FieldLabel>Update Your Opinion:</FieldLabel>
@@ -188,65 +190,68 @@ const UpdateOpinionForm = ({ opinion }: Props) => {
                 )}
               />
             </div>
-              {form.formState.errors.title && (
-                <FieldError errors={[form.formState.errors.title]}/>
-              )}
+            {form.formState.errors.title && (
+              <FieldError errors={[form.formState.errors.title]} />
+            )}
 
-              {form.formState.errors.content && (
-                <FieldError errors={[form.formState.errors.content]}/>
-              )}
-
+            {form.formState.errors.content && (
+              <FieldError errors={[form.formState.errors.content]} />
+            )}
           </Field>
 
-          <Controller
-            name="file"
-            control={form.control}
-            render={({
-              field: { value, onChange, ...fieldProps },
-              fieldState,
-            }) => (
-              <Field>
-                <FieldLabel htmlFor={fieldProps.name}>Update a photo:</FieldLabel>
-                <div
-                  className="relative w-full aspect-video rounded-xl overflow-hidden border bg-muted shadow
+          {!isRepost && !hasChild && (
+            <Controller
+              name="file"
+              control={form.control}
+              render={({
+                field: { value, onChange, ...fieldProps },
+                fieldState,
+              }) => (
+                <Field>
+                  <FieldLabel htmlFor={fieldProps.name}>
+                    Update a photo:
+                  </FieldLabel>
+                  <div
+                    className="relative w-full aspect-video rounded-xl overflow-hidden border bg-muted shadow
                 hover:shadow-primary hover:border-violet-900 transition-all cursor-pointer"
-                >
-                  {previewUrl ? (
-                    <Image
-                      src={previewUrl}
-                      alt="Imagen del post"
-                      fill
-                      className="object-cover transition-transform duration-300"
-                      onClick={handleOpenModal}
-                    />
-                  ) : (
-                    <div
-                      className="w-full flex justify-center items-center h-full"
-                      onClick={() => fileInputRef.current?.click()}
-                    >
-                      <CirclePlus size={40} strokeWidth={1.2} />
-                    </div>
+                  >
+                    {previewUrl ? (
+                      <Image
+                        src={previewUrl}
+                        alt="Imagen del post"
+                        fill
+                        className="object-cover transition-transform duration-300"
+                        onClick={handleOpenModal}
+                      />
+                    ) : (
+                      <div
+                        className="w-full flex justify-center items-center h-full"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <CirclePlus size={40} strokeWidth={1.2} />
+                      </div>
+                    )}
+                  </div>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
                   )}
-                </div>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-                <Input
-                  {...fieldProps}
-                  disabled={loading}
-                  id={fieldProps.name}
-                  aria-invalid={fieldState.invalid}
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={changeFile}
-                  className="hidden"
-                />
-              </Field>
-            )}
-          />
+                  <Input
+                    {...fieldProps}
+                    disabled={loading}
+                    id={fieldProps.name}
+                    aria-invalid={fieldState.invalid}
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={changeFile}
+                    className="hidden"
+                  />
+                </Field>
+              )}
+            />
+          )}
         </FieldGroup>
 
-        <div className="flex gap-3 justify-start items-center mt-3">
+        <div className="flex gap-3 justify-start items-center mt-4">
           <Button type="submit" disabled={loading}>
             Update opinion
           </Button>

@@ -76,7 +76,7 @@ const CustomHeader = ({ opinion, isMyOpinion }: Props) => {
                   )}
                   <DropdownMenuItem
                     onClick={() => {
-                      router.push(`/wa/opinions/update/${opinion.id}`);
+                      router.push(`/wa/opinions/update/${opinion.id}${isRepost ? '?repost=true': ''}`);
                     }}
                   >
                     <div className="flex items-center">
