@@ -11,8 +11,8 @@ import { Input } from "../ui/input";
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { resetPasswordAction } from "@/actions/auth/resetPasswordAction";
 
 const ResetPasswordForm = ({token}: {token: string}) => {
   const form = useForm<ResetForm>({
@@ -23,7 +23,6 @@ const ResetPasswordForm = ({token}: {token: string}) => {
     resolver: zodResolver(resetPasswordSchema),
   });
 
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
   const [fieldLock, setFieldLock] = useState<boolean>(false);
@@ -32,36 +31,20 @@ const ResetPasswordForm = ({token}: {token: string}) => {
   const onSubmit = async (data: ResetForm) => {
     setFieldLock(true);
 
-    try {
-     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/reset-password/${token}`, {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            password: data.password,
-        }),
-     });
+    const { success, error } = await resetPasswordAction(data, token);
 
-     if (res.status === 401) {
-        setTimeout(() => {
-          router.push('/auth/login')
-        }, 2000);
-     };
-
-     const resp = await res.json();
-
-     if (!resp.ok) {
+     if (!success) {
         form.setError("password", {
             type: "manual",
-            message: resp.error,
+            message: error || "Failed to reset password",
         });
         
         form.setError("confirmPassword", {
             type: "manual",
-            message: resp.error,
+            message: error || "Failed to reset password",
         });
 
+        setFieldLock(false);
         return;
      }
 
@@ -69,16 +52,8 @@ const ResetPasswordForm = ({token}: {token: string}) => {
         position: "top-center",
         duration: 5000,
      });
-     setFieldLock(true)
+     setFieldLock(true);
      setWasUpdate(true);        
-    } catch{
-      toast.error('Something is wrong', {
-        description: 'An unexpected error has occurred, please try again later',
-        position: "top-center",
-        duration: 3000
-      });
-      setFieldLock(false);   
-    }
   }
 
   return (

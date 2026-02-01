@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Alert, AlertTitle } from '../ui/alert';
 import { AlertCircleIcon, CheckCircle2Icon } from 'lucide-react';
 import Link from 'next/link';
+import { verifyAccountAction } from '@/actions/auth/verifyAccountAction';
 
 interface Props {
   token : string | string[] | undefined;
@@ -23,12 +24,11 @@ const AccountValidator = ({token}: Props) => {
       };
 
       try {
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify-account/${token}`);
-        const res = await resp.json();
+        const { success, error } = await verifyAccountAction(token);
 
-        if (!res.ok){
+        if (!success){
           setError(true);
-          setMessage(res.error);
+          setMessage(error || 'Verification failed');
           return
         };
 

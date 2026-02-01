@@ -11,6 +11,7 @@ interface Props<T> {
   isPublic?: boolean;
   isFormData?: boolean;
   nextOptions?: RequestInit;
+  headers?: Record<string, string>
 }
 
 export class HttpClient {
@@ -29,6 +30,7 @@ export class HttpClient {
     isPublic = false,
     isFormData = false,
     nextOptions = {},
+    headers = {},
   }: Props<T>): Promise<ServiceResponse<R>> {
     
     const urlObj = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}${url}`);
@@ -40,8 +42,6 @@ export class HttpClient {
         }
       });
     }
-
-    const headers: HeadersInit = {};
     
     if (!isPublic) {
       const token = await this.getToken();
@@ -67,14 +67,14 @@ export class HttpClient {
 
       if (!resp.ok){
         return {
-            statusCode: response.status,
+            statusCode: resp.status,
             success: false,
             error: response.error
         }
       }
 
       return {
-        statusCode: response.status,
+        statusCode: resp.status,
         success: true,
         data: response.data
       }

@@ -38,11 +38,11 @@ const FeedProvider = ({children, fetchMoreData,initialData}: Props) => {
       return
     }
 
-      setOpinions((prev) => prev.filter((op) => op.id !== currentDeleteId));
-      toast.success('Opinion successfully removed', {
-        position: 'top-right',
-        duration: 3000,
-      });
+    setOpinions((prev) => prev.filter((op) => op.id !== currentDeleteId));
+    toast.success('Opinion successfully removed', {
+      position: 'top-right',
+      duration: 3000,
+    });
   }
 
   const onRepostStateChange = (id:string, state:boolean) => {

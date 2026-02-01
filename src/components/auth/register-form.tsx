@@ -7,6 +7,7 @@ import { Button } from "../ui/button"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { type RegisterForm, registerSchema } from "@/schemas/auth/register.schema"
 import { toast } from "sonner"
+import { registerAction } from "@/actions/auth/registerAction"
 
 const RegisterForm = () => {
   const form = useForm<RegisterForm>({
@@ -19,48 +20,44 @@ const RegisterForm = () => {
   });
 
 const [showPassword, setShowPassword] = useState<boolean>(false);
+const [lockFields, setLockFields] = useState<boolean>(false)
 
 const onSubmit = async (data: RegisterForm) => {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/create-account`, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+  setLockFields(true);
+  const { success, error, data: responseData } = await registerAction(data);
+  
+  if (!success && error) {
+    if(error.includes('username')) {
+      form.setError("username", {
+        type: "manual",
+        message: error,
+      });
+      setLockFields(false);
+      return;
+    }
 
-    const resp = await res.json();
-    if(!resp.ok) {
-    
-      if(resp.error.includes('username')) {
-        form.setError("username", {
-          type: "manual",
-          message: resp.error,
-        });
-        return;
-      }
+    if(error.includes('email')) {
+      form.setError("email", {
+        type: "manual",
+        message: error,
+      });
+      setLockFields(false);
+      return;
+    }
 
-      if(resp.error.includes('email')) {
-        form.setError("email", {
-          type: "manual",
-          message: resp.error,
-        });
-        return;
-      }
-    };
-
-    toast.success(resp.data, {
-      position: "top-center",
-      duration: 5000,
-    });
-  } catch {
     toast.error('Something is wrong', {
-      description: 'An unexpected error has occurred, please try again later',
+      description: error || 'An unexpected error has occurred, please try again later',
       position: "top-center",
       duration: 3000
-    })
+    });
+    setLockFields(false);
+    return;
   }
+
+  toast.success(responseData, {
+    position: "top-center",
+    duration: 5000,
+  });
 }
   
   return (
@@ -78,6 +75,7 @@ const onSubmit = async (data: RegisterForm) => {
               <Input
                 {...field}
                 id={field.name}
+                disabled={lockFields}
                 aria-invalid={fieldState.invalid}
                 placeholder="Create a unique username"
                 autoComplete="off"
@@ -102,6 +100,7 @@ const onSubmit = async (data: RegisterForm) => {
               <Input
                 {...field}
                 id={field.name}
+                disabled={lockFields}
                 aria-invalid={fieldState.invalid}
                 placeholder="Enter your email"
                 autoComplete="off"
@@ -128,6 +127,7 @@ const onSubmit = async (data: RegisterForm) => {
                 {...field}
                 id={field.name}
                 aria-invalid={fieldState.invalid}
+                disabled={lockFields}
                 placeholder="Create your password"
                 autoComplete="off"
                 type={showPassword ? "text" : "password"}
@@ -156,7 +156,7 @@ const onSubmit = async (data: RegisterForm) => {
       </FieldGroup>
 
       <div className="mt-3">
-        <Button className="w-full" variant={"default"}>
+        <Button className="w-full" variant={"default"} disabled={lockFields}>
           Register
         </Button>
       </div>

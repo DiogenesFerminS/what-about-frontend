@@ -10,6 +10,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { useState } from "react";
+import { recoveryPasswordAction } from "@/actions/auth/recoveryPasswordAction";
 
 const RecoveryPasswordForm = () => {
   const form = useForm<RecoveryForm>({
@@ -22,41 +23,30 @@ const RecoveryPasswordForm = () => {
 
   const onSubmit = async (data: RecoveryForm) => {
     setLoading(true)
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/reset-password`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-      const resp = await res.json();
+    const { success, error, data:dataResponse } = await recoveryPasswordAction(data);
 
-      if (!res.ok) {
-        form.setError("email", {
-          type: "manual",
-          message: resp.error,
-        });
-        return;
-      };
-
-      toast.success(resp.data, {
-        position: "top-center",
-        duration: 5000,
-      });
-
-    } catch {
-      toast.error("Something is wrong", {
-        description: "An unexpected error has occurred, please try again later",
-        position: "top-center",
+    if(!success && error) {
+      toast.error(error, {
+        position: 'top-right',
         duration: 3000,
       });
-    }finally {
-        setLoading(false)
-    }
+      setLoading(false);
+      return;
+    };
+
+    if(!data) {
+      toast.error(error, {
+        position: 'top-right',
+        duration: 3000,
+      });
+      setLoading(false);
+      return;
+    };
+
+    toast.success(dataResponse, {
+      position: 'top-right',
+      duration: 3000,
+    });
   };
 
   return (
@@ -85,7 +75,7 @@ const RecoveryPasswordForm = () => {
         />
       </FieldGroup>
       <div className="mt-3">
-        <Button className="w-full" variant={"default"}>
+        <Button className="w-full" variant={"default"} disabled={loading}>
           Send instructions
         </Button>
       </div>

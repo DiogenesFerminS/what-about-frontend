@@ -1,9 +1,7 @@
+import { redirect } from "next/navigation"
+
 const Page = () => {
-  return (
-    <div>
-      landing Page
-    </div>
-  )
+  redirect('/auth/login')
 }
 
 export default Page

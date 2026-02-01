@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../ui/field";
 import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
 import { CirclePlus } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -18,6 +17,8 @@ import Image from "next/image";
 import { useModalContext } from "@/context/modal/modal-context";
 import { toast } from "sonner";
 import { createOpinionAction } from "@/actions/opinions/createOpinion";
+
+const TAG_REGEX = /(#[a-zA-Z0-9_ñÑáéíóúÁÉÍÓÚ]+)/g;
 
 const MakeOpinionForm = () => {
   const form = useForm<CreateOpinionForm>({
@@ -35,6 +36,20 @@ const MakeOpinionForm = () => {
   const { openModal, closeModal } = useModalContext();
 
   const router = useRouter();
+
+  const renderHighlightedText = (text: string) => {
+    if (!text) return null;
+    return text.split(TAG_REGEX).map((part, index) => {
+      if (part.match(TAG_REGEX)) {
+        return (
+          <span key={index} className="text-violet-500">
+            {part}
+          </span>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
+  };
 
   const onSubmit = async (data: CreateOpinionForm) => {
     setLoading(true);
@@ -90,13 +105,7 @@ const MakeOpinionForm = () => {
   };
 
   const handleOpenModal = () => {
-    if (!previewUrl) {
-      toast("Something is wrong", {
-        position: "top-left",
-        duration: 3000,
-      });
-      return null;
-    }
+    if (!previewUrl) return;
 
     openModal(
       <div className="flex flex-col relative w-full h-full">
@@ -107,7 +116,6 @@ const MakeOpinionForm = () => {
           className="object-contain p-1 rounded-lg"
           sizes="100%"
         />
-
         <Button
           className="absolute top-0 right-0"
           variant={"ghost"}
@@ -115,20 +123,18 @@ const MakeOpinionForm = () => {
         >
           X
         </Button>
-      </div>,
+      </div>
     );
   };
 
   return (
     <>
-      <form 
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <Field>
             <FieldLabel>Your opinion:</FieldLabel>
 
-            <div className="relative">
+            <div className="relative border rounded-lg shadow-sm">
               <Controller
                 name="title"
                 control={form.control}
@@ -136,7 +142,7 @@ const MakeOpinionForm = () => {
                   <Input
                     {...field}
                     disabled={loading}
-                    className="border-none rounded-none rounded-tl-lg rounded-tr-lg py-3 font-bold text-lg"
+                    className="border-none shadow-none focus-visible:ring-0 rounded-none rounded-tl-lg rounded-tr-lg py-3 font-bold text-lg"
                     placeholder="Your title"
                     autoComplete="off"
                     aria-invalid={fieldState.invalid}
@@ -150,22 +156,31 @@ const MakeOpinionForm = () => {
                 name="content"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <>
-                    <Textarea
+                  <div className="relative w-full h-56 rounded-br-lg rounded-bl-lg overflow-hidden">
+                    <div
+                      className="absolute inset-0 p-3 pointer-events-none whitespace-pre-wrap wrap-break-word z-0 text-gray-800 dark:text-gray-200 overflow-y-auto leading-relaxed font-sans"
+                      aria-hidden="true"
+                    >
+                      {renderHighlightedText(field.value)}
+                      {field.value?.endsWith("\n") && <br />}
+                    </div>
+
+                    <textarea
                       {...field}
                       disabled={loading}
                       id="content"
                       placeholder="Tell us what you think"
                       autoComplete="off"
-                      className="h-55 w-full resize-none overflow-y-scroll border-none rounded-none rounded-br-lg rounded-bl-lg"
+                      spellCheck={false}
+                      className="absolute inset-0 w-full h-full p-3 bg-transparent text-transparent caret-black dark:caret-white resize-none border-none focus:ring-0 focus:outline-none z-10 whitespace-pre-wrap wrap-break-word overflow-y-auto placeholder:text-gray-400 leading-relaxed font-sans"
                       maxLength={2700}
                       aria-invalid={fieldState.invalid}
                     />
 
-                    <span className="text-xs absolute bottom-2 right-2 text-violet-500 font-mono bg-white/50 dark:bg-black/50 px-1 rounded">
+                    <span className="text-xs absolute bottom-2 right-2 text-violet-500 font-mono bg-white/80 dark:bg-black/80 px-1 rounded z-20 pointer-events-none">
                       {`${field.value ? field.value.length : 0} / 2700`}
                     </span>
-                  </>
+                  </div>
                 )}
               />
             </div>
@@ -185,11 +200,11 @@ const MakeOpinionForm = () => {
               field: { value, onChange, ...fieldProps },
               fieldState,
             }) => (
-              <Field>
+              <Field className="mt-4">
                 <FieldLabel htmlFor={fieldProps.name}>Add a photo:</FieldLabel>
                 <div
                   className="relative w-full aspect-video rounded-xl overflow-hidden border bg-muted shadow
-                hover:shadow-primary hover:border-violet-900 transition-all cursor-pointer"
+                hover:shadow-primary hover:border-violet-900 transition-all cursor-pointer group"
                 >
                   {previewUrl ? (
                     <Image
@@ -201,7 +216,7 @@ const MakeOpinionForm = () => {
                     />
                   ) : (
                     <div
-                      className="w-full flex justify-center items-center h-full"
+                      className="w-full flex justify-center items-center h-full group-hover:bg-gray-50 dark:group-hover:bg-gray-900 transition-colors"
                       onClick={() => fileInputRef.current?.click()}
                     >
                       <CirclePlus size={40} strokeWidth={1.2} />
@@ -226,7 +241,7 @@ const MakeOpinionForm = () => {
           />
         </FieldGroup>
 
-        <div className="flex gap-3 justify-start items-center mt-3">
+        <div className="flex gap-3 justify-start items-center mt-6">
           <Button type="submit" disabled={loading}>
             Share opinion
           </Button>

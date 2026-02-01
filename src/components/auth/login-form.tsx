@@ -15,6 +15,7 @@ import { type LoginForm, loginSchema } from "@/schemas/auth/login.schema";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuthContext } from "@/context/auth/auth-context";
+import { loginAction } from "@/actions/auth/loginAction";
 
 const LoginForm = () => {
   const form = useForm<LoginForm>({
@@ -26,47 +27,34 @@ const LoginForm = () => {
   });
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const {checkAuth} = useAuthContext();
+  const { checkAuth } = useAuthContext();
   const router = useRouter();
 
   const onSubmit = async (data: LoginForm) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-          credentials: "include",
-        }
-      );
+    const { success, error, statusCode } = await loginAction(data);
+    if (!success && error) {
+      toast.error(error, {
+        position: "top-right",
+        duration: 3000,
+      });
 
-      const resp = await res.json();
 
-      if (!res.ok) {
-        form.setError("term", {
-          type: "manual",
-          message: resp.error,
-        });
-
-        form.setError("password", {
-          type: "manual",
-          message: resp.error,
-        });
+      if (statusCode === 401 && error) {
+        form.setError("password", { message: error });
+        form.setError("term", { message: error });
         return;
       }
 
-      checkAuth();
-      router.push("/wa/explore");
-    } catch{
-      toast.error('Something is wrong', {
-        description: 'An unexpected error has occurred, please try again later',
-        position: "top-center",
-        duration: 3000
-      })
+      return;
     }
+
+    toast("Logging in...", {
+      position: "top-right",
+      duration: 3000,
+    });
+
+    checkAuth();
+    router.push("/wa/explore");
   };
 
   return (

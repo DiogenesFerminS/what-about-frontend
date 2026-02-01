@@ -1,6 +1,7 @@
 import ImageOpinion from "@/components/common/feed/complementary/card/image-opinion";
 import { Opinion } from "@/interfaces/opinions/opinionData.interface";
 import Link from "next/link";
+import TextContentCard from "./text-content-card";
 
 interface Props {
   opinion: Opinion;
@@ -17,9 +18,8 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
               <span>{opinion.title}</span>
             </div>
             <div>
-              <p>
                 {" "}
-                {`${opinion.content.slice(0, 400)} `}
+                {<TextContentCard content={opinion.content}/>}
                 {opinion.content.length > 400 && (
                   <Link
                     href={`/wa/opinions/${opinion.id}`}
@@ -28,7 +28,6 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
                     ...See more
                   </Link>
                 )}
-              </p>
             </div>
           </div>
 
@@ -39,8 +38,7 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
                 <span>{opinion.originalOpinion.title}</span>
               </div>
 
-              <p>
-                {`${opinion.originalOpinion.content.slice(0, 300)} `}
+                {<TextContentCard content={opinion.originalOpinion.content}/>}
                 {opinion.originalOpinion.content.length > 300 && (
                   <Link
                     href={`/wa/opinions/${opinion.originalOpinion.id}`}
@@ -49,7 +47,6 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
                     ...See more
                   </Link>
                 )}
-              </p>
             </div>
             {opinion.originalOpinion.imageUrl && (
               <ImageOpinion imageUrl={opinion.originalOpinion.imageUrl} />
@@ -63,8 +60,7 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
               <span>{opinion.title}</span>
             </div>
 
-            <p>
-              {`${opinion.content.slice(0, 400)} `}
+              {<TextContentCard content={opinion.content}/>}
               {opinion.content.length > 400 && (
                 <Link
                   href={`/wa/opinions/${opinion.id}`}
@@ -73,7 +69,6 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
                   ...See more
                 </Link>
               )}
-            </p>
           </div>
           {opinion.imageUrl && <ImageOpinion imageUrl={opinion.imageUrl} />}
         </>
