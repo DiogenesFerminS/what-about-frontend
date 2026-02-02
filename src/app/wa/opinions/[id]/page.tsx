@@ -91,7 +91,7 @@ const OpinionPage = async ({ params }: Props) => {
           )}
 
           <section>
-            <p className="whitespace-pre-wrap indent-8">{opinion?.content}</p>
+            <p className="prose whitespace-pre-wrap text-gray-50">{opinion?.content}</p>
           </section>
 
           {opinion.imageUrl && (

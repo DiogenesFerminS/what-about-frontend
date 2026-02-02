@@ -17,6 +17,7 @@ export interface Opinion {
 	isLiked: boolean,
   isRepostedByMe: boolean
   repostCount: number
+  tags: Tag[]
 }
 
 export interface OpinionData {
@@ -26,6 +27,12 @@ export interface OpinionData {
     limit: number,
     total?: number,
   };
+}
+
+export interface Tag {
+  name: string,
+  id: string,
+  count: number,
 }
 
 export interface SimpleOpinion {

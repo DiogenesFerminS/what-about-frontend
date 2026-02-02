@@ -17,8 +17,7 @@ import Image from "next/image";
 import { useModalContext } from "@/context/modal/modal-context";
 import { toast } from "sonner";
 import { createOpinionAction } from "@/actions/opinions/createOpinion";
-
-const TAG_REGEX = /(#[a-zA-Z0-9_ñÑáéíóúÁÉÍÓÚ]+)/g;
+import TextArea from "./text-area";
 
 const MakeOpinionForm = () => {
   const form = useForm<CreateOpinionForm>({
@@ -36,20 +35,6 @@ const MakeOpinionForm = () => {
   const { openModal, closeModal } = useModalContext();
 
   const router = useRouter();
-
-  const renderHighlightedText = (text: string) => {
-    if (!text) return null;
-    return text.split(TAG_REGEX).map((part, index) => {
-      if (part.match(TAG_REGEX)) {
-        return (
-          <span key={index} className="text-violet-500">
-            {part}
-          </span>
-        );
-      }
-      return <span key={index}>{part}</span>;
-    });
-  };
 
   const onSubmit = async (data: CreateOpinionForm) => {
     setLoading(true);
@@ -123,7 +108,7 @@ const MakeOpinionForm = () => {
         >
           X
         </Button>
-      </div>
+      </div>,
     );
   };
 
@@ -142,7 +127,7 @@ const MakeOpinionForm = () => {
                   <Input
                     {...field}
                     disabled={loading}
-                    className="border-none shadow-none focus-visible:ring-0 rounded-none rounded-tl-lg rounded-tr-lg py-3 font-bold text-lg"
+                    className="border-0 border-red-500 shadow-none focus-visible:ring-0 rounded-none rounded-tl-lg rounded-tr-lg py-3 font-bold text-lg aria-invalid:border-t aria-invalid:border-x"
                     placeholder="Your title"
                     autoComplete="off"
                     aria-invalid={fieldState.invalid}
@@ -157,27 +142,15 @@ const MakeOpinionForm = () => {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <div className="relative w-full h-56 rounded-br-lg rounded-bl-lg overflow-hidden">
-                    <div
-                      className="absolute inset-0 p-3 pointer-events-none whitespace-pre-wrap wrap-break-word z-0 text-gray-800 dark:text-gray-200 overflow-y-auto leading-relaxed font-sans"
-                      aria-hidden="true"
-                    >
-                      {renderHighlightedText(field.value)}
-                      {field.value?.endsWith("\n") && <br />}
-                    </div>
-
-                    <textarea
-                      {...field}
+                    <TextArea
+                      ariaInvalid={fieldState.invalid}
+                      onChange={field.onChange}
+                      value={field.value}
                       disabled={loading}
-                      id="content"
-                      placeholder="Tell us what you think"
-                      autoComplete="off"
-                      spellCheck={false}
-                      className="absolute inset-0 w-full h-full p-3 bg-transparent text-transparent caret-black dark:caret-white resize-none border-none focus:ring-0 focus:outline-none z-10 whitespace-pre-wrap wrap-break-word overflow-y-auto placeholder:text-gray-400 leading-relaxed font-sans"
                       maxLength={2700}
-                      aria-invalid={fieldState.invalid}
+                      placeholder="Enter your Opinion"
                     />
-
-                    <span className="text-xs absolute bottom-2 right-2 text-violet-500 font-mono bg-white/80 dark:bg-black/80 px-1 rounded z-20 pointer-events-none">
+                    <span className="text-xs absolute bottom-0 right-0 text-violet-600 font-mono px-1 rounded z-20 pointer-events-none">
                       {`${field.value ? field.value.length : 0} / 2700`}
                     </span>
                   </div>

@@ -19,7 +19,7 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
             </div>
             <div>
                 {" "}
-                {<TextContentCard content={opinion.content}/>}
+                {<TextContentCard content={opinion.content} tags={opinion.tags}/>}
                 {opinion.content.length > 400 && (
                   <Link
                     href={`/wa/opinions/${opinion.id}`}
@@ -38,7 +38,7 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
                 <span>{opinion.originalOpinion.title}</span>
               </div>
 
-                {<TextContentCard content={opinion.originalOpinion.content}/>}
+                {<TextContentCard content={opinion.originalOpinion.content} tags={opinion.tags}/>}
                 {opinion.originalOpinion.content.length > 300 && (
                   <Link
                     href={`/wa/opinions/${opinion.originalOpinion.id}`}
@@ -60,7 +60,7 @@ const CustomCardBody = ({ opinion, isRepost }: Props) => {
               <span>{opinion.title}</span>
             </div>
 
-              {<TextContentCard content={opinion.content}/>}
+              {<TextContentCard content={opinion.content} tags={opinion.tags}/>}
               {opinion.content.length > 400 && (
                 <Link
                   href={`/wa/opinions/${opinion.id}`}
