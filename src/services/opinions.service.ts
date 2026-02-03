@@ -77,12 +77,20 @@ export class OpinionsService {
     });
   }
 
-  static async updateOpinion(formData: FormData, id: string) {
+  static async updateOpinion(formData: FormData, id: string): Promise<ServiceResponse<SimpleOpinion>> {
     return HttpClient.punchEndPoint<FormData, SimpleOpinion>({
       url: `/opinions/${id}`,
       method: "PATCH",
       body: formData,
       isFormData: true
     });
+  }
+
+  static async getOpinionsByTag(tag: string, {limit = 10, page}: Pagination): Promise<ServiceResponse<OpinionData>> {
+    return HttpClient.punchEndPoint<undefined, OpinionData>({
+      url: `/opinions/tag/${tag}`,
+      method: "GET",
+      params: {limit, page}
+    })
   }
 }

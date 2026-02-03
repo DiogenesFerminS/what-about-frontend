@@ -1,5 +1,6 @@
 import GoBackButton from "@/components/common/feed/complementary/card/buttons/go-back.btn";
 import ImageOpinion from "@/components/common/feed/complementary/card/image-opinion";
+import TextContentCard from "@/components/common/feed/complementary/card/text-content-card";
 import ErrorHandler from "@/components/common/others/errorhandler";
 import SimpleFooter from "@/components/opinions/simple-footer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -91,7 +92,7 @@ const OpinionPage = async ({ params }: Props) => {
           )}
 
           <section>
-            <p className="prose whitespace-pre-wrap text-gray-50">{opinion?.content}</p>
+            <TextContentCard content={opinion.content} tags={opinion.tags}/>
           </section>
 
           {opinion.imageUrl && (

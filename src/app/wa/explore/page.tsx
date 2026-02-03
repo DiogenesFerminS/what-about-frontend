@@ -1,4 +1,5 @@
 import loadMoreOpinions from "@/actions/opinions/loadMoreOpinions";
+import { loadOpinionsByTagAction } from "@/actions/opinions/loadOpinionsByTag";
 import { loadOpinionsByTermAction } from "@/actions/opinions/loadOpinionsByTerm";
 import Feed from "@/components/common/feed/feed";
 import SearchBar from "@/components/search/searchBar";
@@ -14,32 +15,49 @@ interface Props {
 
 const ExplorePage = async ({ searchParams }: Props) => {
   const search = await searchParams;
+  const term = search.term as string;
+  const tag = search.tag as string;
 
   const loadOpinionsByTerm = async(page: number) => {
     "use server";
 
-    return loadOpinionsByTermAction(search.term as string,page)
-  }
+    return loadOpinionsByTermAction(search.term as string, page)
+  };
+
+  const loadOpinionsByTag = async(page: number) => {
+    "use server";
+
+    return loadOpinionsByTagAction(tag, page);
+  };
 
   let success: boolean;
   let statusCode: number;
   let data: OpinionData | undefined;
   let callBackFn: (page:number) => Promise<Opinion[]>;
+  let feedKey: string = 'default-key';
 
-  if(!search.term || search.term === '') {
-    
+  if(term) {
+    const response = await OpinionsService.findByterm(term.toLowerCase().trim(), {limit: 10, page: 1});
+    success = response.success;
+    statusCode = response.statusCode;
+    data = response.data
+    callBackFn = loadOpinionsByTerm;
+    feedKey = `term-key-${term}`
+  }else if(tag) {
+    const response = await OpinionsService.getOpinionsByTag(tag.toLowerCase().trim(), {limit: 10, page: 1})
+    success = response.success;
+    statusCode = response.statusCode;
+    data = response.data;
+    callBackFn = loadOpinionsByTag
+    feedKey = `tag-key-${tag}`
+  }
+  else {
     const response = await OpinionsService.getOpinions({limit: 10, page: 1});
     success = response.success;
     statusCode = response.statusCode;
     data = response.data
     callBackFn = loadMoreOpinions;
-
-  } else {
-    const response = await OpinionsService.findByterm(search.term as string, {limit: 10, page: 1});
-    success = response.success;
-    statusCode = response.statusCode;
-    data = response.data
-    callBackFn = loadOpinionsByTerm;
+    feedKey = 'default-key'
   }
 
   if (!success) {
@@ -74,7 +92,7 @@ const ExplorePage = async ({ searchParams }: Props) => {
           <FeedProvider 
             fetchMoreData={callBackFn} 
             initialData={data.data}
-            key={search.term as string}
+            key={feedKey}
           >
             <Feed
             />

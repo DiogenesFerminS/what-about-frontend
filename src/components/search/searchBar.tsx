@@ -8,7 +8,7 @@ import { useDebounce } from "@/hooks/search/useDebounce";
 import { getUsersByTermAction } from "@/actions/users/getUsersByTerm";
 import { toast } from "sonner";
 import { User } from "@/interfaces/common/user-interface";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Spinner } from "../ui/spinner";
 import { useRouter } from "next/navigation";
 import { FieldSeparator } from "../ui/field";
@@ -162,6 +162,7 @@ const SearchBar = () => {
                                       src={user.avatarUrl ?? ""}
                                       alt={user.username}
                                     />
+                                    <AvatarFallback>{user.username.split("")[0].toUpperCase()}</AvatarFallback>
                                   </Avatar>
                                 </div>
                                 <div className="flex flex-col">
