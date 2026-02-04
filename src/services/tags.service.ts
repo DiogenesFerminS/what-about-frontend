@@ -9,4 +9,13 @@ export class TagsService {
 
     return response;
   }
+
+  static getTagsTrending() {
+    const response = HttpClient.punchEndPoint<undefined, {id: string, name: string, count: number}[]>({
+      method: 'GET',
+      url: `/tags/trending`,
+    });
+
+    return response;
+  }
 }

@@ -199,12 +199,19 @@ const SearchBar = () => {
       </div>
 
       <div className="bg-gray-600 h-px mt-4"></div>
-      <div className="w-full mb-4 flex">
+      <div className="w-full mb-4 flex gap-3 justify-center">
         <div 
           className="p-3 flex border-b-2 hover:border-b-violet-600 transition-all"
           onClick={() => {router.push('/wa/explore')}}
         >
           <Link href={"/wa/explore"}>Explore</Link>
+        </div>
+
+         <div 
+          className="p-3 flex border-b-2 hover:border-b-violet-600 transition-all"
+          onClick={() => {router.push('/wa/trending')}}
+        >
+          <Link href={"/wa/trending"}>Trending</Link>
         </div>
       </div>
       {/* <div className="bg-gray-600 h-px"></div> */}
