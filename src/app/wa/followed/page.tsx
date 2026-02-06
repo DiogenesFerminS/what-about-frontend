@@ -5,6 +5,12 @@ import { OpinionsService } from "@/services/opinions.service";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+
+export const metadata = {
+ title: 'Followed',
+ description: 'Here you will find all the opinions from the users you follow',
+};
+
 const FollowedPage = async() => {
   const {success, statusCode, data} = await OpinionsService.getFollowOpinions({limit: 10, page: 1});
 

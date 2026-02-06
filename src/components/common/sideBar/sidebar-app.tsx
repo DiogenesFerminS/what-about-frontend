@@ -1,14 +1,14 @@
-import { House, Pen, Search, User } from "lucide-react"
+import { Pen, Search, User } from "lucide-react"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu } from "../../ui/sidebar"
 import SideBarItem from "./sidebar-item"
 import { FieldSeparator } from "@/components/ui/field"
 
 const options = [
-    {
-      name: "For you",
-      href: "/wa/for-you",
-      icon: <House strokeWidth={1.2}/> 
-    },
+    // {
+    //   name: "For you",
+    //   href: "/wa/for-you",
+    //   icon: <House strokeWidth={1.2}/> 
+    // },
     {
         name: "Explore",
         href: "/wa/explore",

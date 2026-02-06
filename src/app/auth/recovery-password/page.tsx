@@ -1,7 +1,14 @@
 import RecoveryPasswordForm from "@/components/auth/recovery-password-form"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FieldSeparator } from "@/components/ui/field"
+import { Metadata } from "next";
 import Link from "next/link"
+
+
+export const metadata: Metadata = {
+ title: 'Recovery Your Password',
+ description: 'On this page you can recover your password for What About'
+};
 
 const RecoveryPage = () => {
   return (

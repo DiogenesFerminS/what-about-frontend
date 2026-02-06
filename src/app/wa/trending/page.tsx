@@ -2,6 +2,12 @@ import { getTrendingTagsActions } from "@/actions/tags/getTrendingTags";
 import ErrorHandler from "@/components/common/others/errorhandler";
 import Link from "next/link";
 
+
+export const metadata = {
+ title: 'Trending Page',
+ description: 'On this page you will find the most used or most popular tags from What about?',
+};
+
 const TrendingPage = async () => {
   const { success, data, error } = await getTrendingTagsActions();
 

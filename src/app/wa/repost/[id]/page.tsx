@@ -3,7 +3,20 @@ import RepostOpinionForm from "@/components/opinions/repost-opinion-form";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardHeader } from "@/components/ui/card";
 import { OpinionsService } from "@/services/opinions.service";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export async function generateMetadata({params}: {
+  params: {id: string}
+}): Promise<Metadata> {
+  const post = await OpinionsService.getAllOneById(params.id);
+
+  const title = post.data?.title ?? 'Opinion title';
+  return {
+    title: 'Resposts',
+    description: `On this page you can create a repost of opinion: ${title}`
+  }
+}
 
 interface Props {
   params: Promise<{id: string}>

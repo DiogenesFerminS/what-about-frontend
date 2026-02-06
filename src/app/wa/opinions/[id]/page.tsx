@@ -6,10 +6,30 @@ import SimpleFooter from "@/components/opinions/simple-footer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { OpinionsService } from "@/services/opinions.service";
+import { Metadata } from "next";
 import Link from "next/link";
 
 interface Props {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({params}: Props): Promise<Metadata> {
+  const {id} = await params;
+  const {data} = await OpinionsService.getAllOneById(id);
+
+  let title: string = '';
+  if(data) {
+    if(data.title) {
+      title = data.title.split(' ')[0] + '...';
+    }else{
+      title = 'Opinion Page'
+    }
+  }
+
+  return {
+    title,
+    description: 'On this page you can find detailed information about a specific post.'
+  }
 }
 
 const OpinionPage = async ({ params }: Props) => {

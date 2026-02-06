@@ -10,6 +10,12 @@ import { FieldSeparator } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { UsersService } from "@/services/users.service";
 
+
+export const metadata = {
+ title: 'Update Your Profile',
+ description: 'Here you can update your profile information',
+};
+
 const UpdatePage = async () => {
   const { data } = await UsersService.getUser();
   if( !data) {

@@ -17,6 +17,12 @@ interface Props {
   searchParams: Promise<{[Key:string]: string | string[] | undefined}>;
 }
 
+export const metadata = {
+ title: 'Update Opinion',
+ description: 'On this page you can update opinions',
+};
+
+
 const UpdatePage = async ({ params, searchParams }: Props) => {
   const { id } = await params;
   const {repost} = await searchParams;

@@ -6,11 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Metadata } from "next";
 
 interface Props {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+
+export const metadata: Metadata = {
+ title: 'Confirm Your Account',
+ description: 'On this page you can confirm your account'
+};
 
 const ConfirmPage = async ({ searchParams }: Props) => {
   const { token } = await searchParams;

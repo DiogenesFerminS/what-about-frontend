@@ -1,12 +1,13 @@
 import LoginForm from "@/components/auth/login-form";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldSeparator } from "@/components/ui/field";
+import { Metadata } from "next";
 import Link from "next/link";
 
 
-export const metadata = {
- title: 'Login - What-About?',
- description: '',
+export const metadata: Metadata = {
+ title: 'Login ',
+ description: 'Welcome to the What About login page',
 };
 
 const LoginPage = () => {

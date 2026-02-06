@@ -26,16 +26,16 @@ import { toast } from "sonner";
 const UpdateForm = ({ user }: { user: User }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [preview, setPreview] = useState<string | null>(user.avatarUrl);
-  const {updateUser} = useAuthContext();
+  const { updateUser } = useAuthContext();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   const form = useForm<UpdateProfileForm>({
     defaultValues: {
-      name: user.name ?? '',
-      bio: user.bio ?? '',
-      location: user.location ?? '',
+      name: user.name ?? "",
+      bio: user.bio ?? "",
+      location: user.location ?? "",
       file: undefined,
     },
     resolver: zodResolver(updateProfileSchema),
@@ -55,7 +55,7 @@ const UpdateForm = ({ user }: { user: User }) => {
     setPreview(objectUrl);
     form.setValue("file", file);
     (e.target as HTMLInputElement).value = "";
-  }
+  };
 
   const onSubmit = async (inputData: UpdateProfileForm) => {
     setLoading(true);
@@ -67,23 +67,23 @@ const UpdateForm = ({ user }: { user: User }) => {
 
     if (inputData.file) {
       formData.append("file", inputData.file);
-    };
+    }
 
-    const {success, data, error} = await updateUserAction(formData);
+    const { success, data, error } = await updateUserAction(formData);
 
     setLoading(false);
 
-    if(!success && error ) {
+    if (!success && error) {
       toast.error(error, {
-        position: 'top-right',
+        position: "top-right",
         duration: 3000,
       });
       return;
-    };
+    }
 
-    if(!data) {
-        toast.error('Updated profile failed', {
-        position: 'top-right',
+    if (!data) {
+      toast.error("Updated profile failed", {
+        position: "top-right",
         duration: 3000,
       });
       return;
@@ -91,45 +91,45 @@ const UpdateForm = ({ user }: { user: User }) => {
 
     updateUser(data);
 
-    toast.success('Profile updated', {
-      position: 'top-right',
+    toast.success("Profile updated", {
+      position: "top-right",
       duration: 3000,
     });
 
     setTimeout(() => {
-      const url = `/wa/profile/${user.id}`
+      const url = `/wa/profile/${user.id}`;
       router.push(url);
     }, 2000);
-  }
+  };
 
   return (
     <>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex justify-center items-center gap-4 mb-4 rounded-lg w-fit">
-            <Avatar className="size-25">
-                <AvatarImage src={preview || ''} className="object-cover" />
-                <AvatarFallback>
-                    {user.username.split('')[0].toUpperCase()}
-                </AvatarFallback>
-            </Avatar>
+          <Avatar className="size-25">
+            <AvatarImage src={preview || ""} className="object-cover" />
+            <AvatarFallback>
+              {user.username.split("")[0].toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
 
-            <div>
-                <h3 className="capitalize">{user.username}</h3>
-                <Button 
-                    className="capitalize mt-2" 
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                >change photo</Button>
-            </div>
+          <div>
+            <h3 className="capitalize">{user.username}</h3>
+            <Button
+              className="capitalize mt-2"
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              change photo
+            </Button>
+          </div>
 
-            <input 
-              type="file"
-              ref={fileInputRef}
-              onChange={onImageChange}
-              className="hidden" 
-            />
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={onImageChange}
+            className="hidden"
+          />
         </div>
         <FieldGroup>
           <Controller
@@ -203,10 +203,21 @@ const UpdateForm = ({ user }: { user: User }) => {
           />
         </FieldGroup>
 
-        <Button
-          className="mt-5"
-          type="submit"
-        >Update Profile</Button>
+        <div className="flex gap-2 mt-5">
+          <Button type="submit">
+            Update Profile
+          </Button>
+
+          <Button 
+            type="button"
+            variant={"destructive"}
+            onClick={() => {
+              router.back()
+            }}
+          >
+            Back
+          </Button>
+        </div>
       </form>
     </>
   );

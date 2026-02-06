@@ -13,6 +13,12 @@ interface Props {
   searchParams: Promise<{[Key:string]: string | string[] | undefined}>
 }
 
+
+export const metadata = {
+ title: 'Explore',
+ description: 'Explore different opinions from all users of what about',
+};
+
 const ExplorePage = async ({ searchParams }: Props) => {
   const search = await searchParams;
   const term = search.term as string;

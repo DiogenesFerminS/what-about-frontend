@@ -6,11 +6,24 @@ import FeedProvider from "@/context/feed/feed-context-provider";
 import { FollowsService } from "@/services/follows.service";
 import { OpinionsService } from "@/services/opinions.service";
 import { UsersService } from "@/services/users.service";
+import { Metadata } from "next";
 import Image from "next/image";
 
 interface Props {
     params: Promise<{id: string}>
 }
+
+export async function generateMetadata({params}: Props): Promise<Metadata> {
+  const {id} = await params;
+
+  const {data} = await UsersService.getUserById(id);
+  const title = data?.username ?? 'Profile Page' 
+  return {
+    title: title,
+    description: 'On this page you can find information about each user'
+  }
+}
+
 const ProfilePage = async ({params} : Props) => {
   const {id} = await params;
   const {data:user, error, success} = await UsersService.getUserById(id);

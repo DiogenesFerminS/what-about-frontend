@@ -7,6 +7,12 @@ interface Props {
   searchParams: Promise<{[key:string]: string | undefined}>;
 };
 
+
+export const metadata = {
+ title: 'Reset Your Password',
+ description: 'On this page you can reset your What About password',
+};
+
 const RecoveryPage = async ({searchParams}: Props) => {
   const {token} = await searchParams;
 

@@ -1,7 +1,14 @@
 import RegisterForm from "@/components/auth/register-form"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FieldSeparator } from "@/components/ui/field"
+import { Metadata } from "next";
 import Link from "next/link"
+
+
+export const metadata: Metadata = {
+ title: 'Register',
+ description: 'On this page you can register for What About',
+};
 
 const RegisterPage = () => {
   return (
