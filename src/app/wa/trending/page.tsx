@@ -27,7 +27,7 @@ const TrendingPage = async () => {
       {data.map((tag) => (
         <div
           key={tag.id}
-          className="w-full flex justify-between bg-linear-to-r from-violet-600 to-violet-900 py-2 px-5 rounded-lg animate-up-down"
+          className="w-full flex justify-between bg-linear-to-r from-violet-600 to-violet-900 py-2 px-5 rounded-lg animate-up-down max-w-140 mx-auto"
         >
           <Link
             href={`/wa/explore?tag=${tag.name}`}

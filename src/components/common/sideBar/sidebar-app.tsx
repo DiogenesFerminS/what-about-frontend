@@ -1,4 +1,4 @@
-import { Pen, Search, User } from "lucide-react"
+import { Bell, Pen, Search, User } from "lucide-react"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu } from "../../ui/sidebar"
 import SideBarItem from "./sidebar-item"
 import { FieldSeparator } from "@/components/ui/field"
@@ -23,6 +23,11 @@ const options = [
       name: "Make Opinion",
       href: "/wa/opinions/make",
       icon: <Pen strokeWidth={1.2}/>
+    },
+    {
+      name: "Notifications",
+      href: "/wa/notifications",
+      icon: <Bell strokeWidth={1.2}/>
     },
 ]
 
