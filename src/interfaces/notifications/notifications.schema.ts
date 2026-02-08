@@ -4,7 +4,6 @@ import { Opinion } from "../opinions/opinionData.interface";
 export enum NotificationType {
   LIKE = 'LIKE',
   FOLLOW = 'FOLLOW',
-  COMMENT = 'COMMENT',
   REPOST = 'REPOST',
 }
 
@@ -19,7 +18,11 @@ export interface Notification {
 }
 
 export interface NotificationsResponse {
-  ok: boolean,
-  message: string,
+  meta: {
+    total: number,
+    page: number,
+    limit: number,
+    totalPage: number
+  }, 
   data: Notification[]
 }

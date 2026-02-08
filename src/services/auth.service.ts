@@ -8,6 +8,28 @@ import { ResetForm } from "@/schemas/auth/reset-password.schema";
 import { RecoveryForm } from "@/schemas/auth/recovery-password.schema";
 
 export class AuthService {
+
+  static async checkAuth() {
+    return HttpClient.punchEndPoint<undefined, User>({
+      url: '/users/profile',
+      method: "GET",
+    });
+  }
+
+  static async logout() {
+    const response = await HttpClient.punchEndPoint<undefined, undefined>({
+      url: '/auth/logout',
+      method: 'GET',
+    });
+
+    if( response.success ) {
+      const cookiesStore = await cookies();
+      cookiesStore.delete("auth-token");
+    }
+
+    return response;
+  }
+
   static async login(data: LoginForm):Promise<ServiceResponse<undefined>> {
     const response = await HttpClient.punchEndPoint<LoginForm, {token: string}>({
         url:'/auth/login',

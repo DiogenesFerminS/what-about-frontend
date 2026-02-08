@@ -1,5 +1,5 @@
 import ErrorHandler from "@/components/common/others/errorhandler";
-import NotificationAlert from "@/components/notifications/notification-alert";
+import NotificationsFeed from "@/components/notifications/notification-feed";
 import { NotificationsService } from "@/services/notifications.service";
 
 export const metadata = {
@@ -7,9 +7,17 @@ export const metadata = {
   description: "",
 };
 
-const NotificationsPage = async () => {
+interface PageProps { 
+  searchParams: Promise<{page?: string}>
+}
+
+const NotificationsPage = async ({searchParams}: PageProps) => {
+  const { page } = await searchParams;
+  const currentPage = page ? Number(page): 1;
+
+
   const { success, data, error } =
-    await NotificationsService.getNotifications();
+    await NotificationsService.getNotifications(currentPage);
 
   if (!success && error) {
     return <ErrorHandler errorMessage={error} />;
@@ -20,16 +28,12 @@ const NotificationsPage = async () => {
   }
 
   return (
-    <div className="mx-auto flex flex-col justify-start w-full lg:max-w-6/12 sm:max-w-110 px-3 gap-5 py-1 md:border-x border-gray-600 h-full">
+    <div className="mx-auto flex flex-col justify-start w-full lg:max-w-6/12 sm:max-w-110 px-3 gap-5 md:border-x border-gray-600 h-full">
       <span className="text-xl font-bold text-center mt-2">
         Your Notifications
       </span>
 
-      <div>
-        {data.map((notification) => (
-          <NotificationAlert key={notification.id} notification={notification}/>
-        ))}
-      </div>
+      <NotificationsFeed initialNotifications={data.data}/>
     </div>
   );
 };

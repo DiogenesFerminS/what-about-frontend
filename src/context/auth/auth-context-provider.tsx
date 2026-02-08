@@ -4,6 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { AuthContext } from "./auth-context";
 import { User } from "@/interfaces/common/user-interface";
 import { useRouter } from "next/navigation";
+import { getNotReadAction } from "@/actions/notifications/getNotReadAction";
+import { checkAuthAction } from "@/actions/auth/checkAuthAction";
+import { logoutAction } from "@/actions/auth/logoutAction";
 
 interface Props {
   children: React.ReactNode;
@@ -21,6 +24,7 @@ export const AuthProvider = ({ children }: Props) => {
     message: null,
   });
   const [loading, setLoading] = useState<boolean>(false);
+  const [notRead, setNotRead] = useState<number>(0);
 
   const router = useRouter();
 
@@ -31,24 +35,25 @@ export const AuthProvider = ({ children }: Props) => {
   const checkAuth = useCallback( async () => {
     setLoading(true);
     try {
-      const resp = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/profile`,
-        {
-          credentials: "include",
-        }
-      );
+      const {success, data, error} = await checkAuthAction();
 
-      const data = await resp.json();
-
-      if (!data.ok) {
-        setUser(null);
+      if(!success && error) {
         setError({
-            error: true,
-            message: 'Your identity could not be verified',
+          error: true,
+          message: error
         });
-      };
 
-      setUser(data.data);
+        return;
+      }
+
+      if(!data) {
+        setError({
+          error: true,
+          message: 'An unexpected error occurred while verifying your identity.',
+        })
+        return;
+      }
+      setUser(data);
     } catch {
       setError({
         error: true,
@@ -61,36 +66,47 @@ export const AuthProvider = ({ children }: Props) => {
     }
   }, [setUser, router]);
 
-    const logout = async () => {
-      try {
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/logout`, {
-        credentials: "include",
-        });
+  const logout = async () => {
+    try {
+     const { success } = await logoutAction();
 
-        if(!resp.ok) {
-            setError({
-                error: true,
-                message: 'This happened when you logged out.'
-            })
-            return;
-        }
+     if (!success) {
+      setError({
+        error: true,
+        message: 'An unexpected error occurred while closing your session.',
+      })
+      return;
+     }
 
-        setUser(null);
-        router.push('/auth/login');
-      } catch {
-        setError({
-          error: true,
-          message: 'Something has gone wrong',
-        });
-      }
+      setUser(null);
+      router.push('/auth/login');
+    } catch {
+      setError({
+        error: true,
+        message: 'Something has gone wrong',
+      });
     }
+  }
+
+    const getNotRead = useCallback( async () => {
+      const {success, data, error} = await getNotReadAction();
+
+      if(!success && error) {
+        return;
+      }
+
+      if(!data) return;
+
+      setNotRead(data.count);
+    }, [])
 
     useEffect(() => {
       checkAuth();
-    }, [checkAuth]);
+      getNotRead();
+    }, [checkAuth, getNotRead]);
 
 
   return (
-    <AuthContext.Provider value={{ user, error, loading, logout, checkAuth, updateUser }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, error, loading, logout, checkAuth, updateUser,notRead }}>{children}</AuthContext.Provider>
   );
 };

@@ -1,7 +1,8 @@
-import { Bell, Pen, Search, User } from "lucide-react"
+import { Pen, Search, User } from "lucide-react"
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarHeader, SidebarMenu } from "../../ui/sidebar"
 import SideBarItem from "./sidebar-item"
 import { FieldSeparator } from "@/components/ui/field"
+import NotificationSideBarItem from "./notification-sidebar-item"
 
 const options = [
     // {
@@ -23,11 +24,6 @@ const options = [
       name: "Make Opinion",
       href: "/wa/opinions/make",
       icon: <Pen strokeWidth={1.2}/>
-    },
-    {
-      name: "Notifications",
-      href: "/wa/notifications",
-      icon: <Bell strokeWidth={1.2}/>
     },
 ]
 
@@ -56,6 +52,7 @@ export const AppSideBar = () => {
                 ))
               }
               
+              <NotificationSideBarItem/>
             </SidebarMenu>
           </SidebarGroupContent>
         <SidebarGroup />

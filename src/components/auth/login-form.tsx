@@ -54,7 +54,10 @@ const LoginForm = () => {
     });
 
     checkAuth();
-    router.push("/wa/explore");
+    
+    setTimeout(() => {
+      router.push("/wa/explore");
+    }, 2000)
   };
 
   return (
