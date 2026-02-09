@@ -11,7 +11,6 @@ interface AuthContextType {
     error: AuthError;
     loading: boolean;
     updateUser: (user: User) => void;
-    notRead: number;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);

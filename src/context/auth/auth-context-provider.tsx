@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import { AuthContext } from "./auth-context";
 import { User } from "@/interfaces/common/user-interface";
 import { useRouter } from "next/navigation";
-import { getNotReadAction } from "@/actions/notifications/getNotReadAction";
 import { checkAuthAction } from "@/actions/auth/checkAuthAction";
 import { logoutAction } from "@/actions/auth/logoutAction";
 
@@ -24,7 +23,6 @@ export const AuthProvider = ({ children }: Props) => {
     message: null,
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const [notRead, setNotRead] = useState<number>(0);
 
   const router = useRouter();
 
@@ -88,25 +86,14 @@ export const AuthProvider = ({ children }: Props) => {
     }
   }
 
-    const getNotRead = useCallback( async () => {
-      const {success, data, error} = await getNotReadAction();
 
-      if(!success && error) {
-        return;
-      }
-
-      if(!data) return;
-
-      setNotRead(data.count);
-    }, [])
 
     useEffect(() => {
       checkAuth();
-      getNotRead();
-    }, [checkAuth, getNotRead]);
+    }, [checkAuth]);
 
 
   return (
-    <AuthContext.Provider value={{ user, error, loading, logout, checkAuth, updateUser,notRead }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, error, loading, logout, checkAuth, updateUser }}>{children}</AuthContext.Provider>
   );
 };

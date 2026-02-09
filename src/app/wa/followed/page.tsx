@@ -38,7 +38,7 @@ const FollowedPage = async() => {
   }
 
   return (
-    <div className="mx-auto flex flex-col justify-start w-full lg:max-w-6/12 sm:max-w-110 px-3 gap-5 py-1 md:border-x border-gray-600 ">
+    <div className="mx-auto flex flex-col justify-start w-full lg:max-w-6/12 sm:max-w-110 px-3 gap-5 py-1 md:border-x border-gray-600 h-full ">
       <FeedProvider fetchMoreData={getFollowOpinionsAction} initialData={data!.data}>
         <Feed />
       </FeedProvider>

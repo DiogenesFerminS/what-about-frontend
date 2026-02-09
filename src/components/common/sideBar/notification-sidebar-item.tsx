@@ -1,13 +1,13 @@
 "use client"
 import { SidebarMenuButton } from '@/components/ui/sidebar'
-import { useAuthContext } from '@/context/auth/auth-context';
+import { useNotificationContext } from '@/context/notification/notification-context';
 import { Bell } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const NotificationSideBarItem = () => {
   const pathname = usePathname();
-  const { notRead } = useAuthContext();
+  const { notRead } = useNotificationContext();
   const isActive = pathname === '/wa/notifications' || pathname.startsWith(`/wa/notifications/`)
   return (
     <SidebarMenuButton asChild size={"lg"} isActive={isActive}>

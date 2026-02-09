@@ -19,35 +19,43 @@ export class AuthService {
   static async logout() {
     const response = await HttpClient.punchEndPoint<undefined, undefined>({
       url: '/auth/logout',
-      method: 'GET',
+      method: 'POST',
     });
 
     if( response.success ) {
       const cookiesStore = await cookies();
       cookiesStore.delete("auth-token");
+      cookiesStore.delete("refresh-token");
     }
 
     return response;
   }
 
   static async login(data: LoginForm):Promise<ServiceResponse<undefined>> {
-    const response = await HttpClient.punchEndPoint<LoginForm, {token: string}>({
+    const response = await HttpClient.punchEndPoint<LoginForm, {accessToken: string, refreshToken: string}>({
         url:'/auth/login',
         method: "POST",
         body: data,
         isPublic: true,
-        headers: {"x-client-type" : 'server-action'}
     });
 
     if (response.success && response.data) {
-    const cookiesStore = await cookies();
-    cookiesStore.set("auth-token", response.data.token, {
+      const cookiesStore = await cookies();
+      cookiesStore.set("auth-token", response.data.accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+          maxAge: 60 * 15,
+      });
+
+      cookiesStore.set("refresh-token", response.data.refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         path: "/",
-        maxAge: 60 * 60,
-    })
+        maxAge: 60 * 60 * 24 * 7,
+      })
     };
 
     return {

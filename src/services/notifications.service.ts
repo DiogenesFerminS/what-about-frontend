@@ -6,7 +6,7 @@ export class NotificationsService {
     return HttpClient.punchEndPoint<undefined, NotificationsResponse>({
         method: 'GET',
         url: '/notifications/stats',
-        params: {limit: 10, page: page}
+        params: {limit: 10, page: page},
     })
   }
 

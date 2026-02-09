@@ -1,5 +1,6 @@
 import { ServiceResponse } from "@/interfaces/common/service-response.interface";
 import { cookies } from "next/headers";
+import { refreshToken } from "./refresh/refresh";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
@@ -16,12 +17,6 @@ interface Props<T> {
 
 export class HttpClient {
   
-  private static async getToken() {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("auth-token")?.value;
-
-    return token;
-  }
   static async punchEndPoint<T, R>({
     body,
     method,
@@ -32,7 +27,6 @@ export class HttpClient {
     nextOptions = {},
     headers = {},
   }: Props<T>): Promise<ServiceResponse<R>> {
-    
     const urlObj = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}${url}`);
     
     if (params) {
@@ -43,12 +37,9 @@ export class HttpClient {
       });
     }
     
+    let cookieStore = await cookies();
     if (!isPublic) {
-      const token = await this.getToken();
-      if (!token) {
-        return { success: false, statusCode: 401, error: "Unauthorized: No token found" };
-      }
-      headers["Cookie"] = `auth-token=${token}`;
+      headers["Cookie"] = cookieStore.toString();
     }
 
     if (!isFormData) {
@@ -56,12 +47,35 @@ export class HttpClient {
     }
 
     try {
-      const resp = await fetch(urlObj.toString(), {
+      let resp = await fetch(urlObj.toString(), {
         method,
         headers,
         body: method === "GET" ? undefined : (isFormData ? (body as FormData) : JSON.stringify(body)),
         ...nextOptions,
       });
+
+      if (resp.status === 401) {
+        const refreshed = await refreshToken();
+
+        if(!refreshed) {
+          return {
+            statusCode: 401,
+            success: false,
+            error: 'Expired token'
+          }
+        }
+
+        cookieStore = await cookies();
+        headers["Cookie"] = cookieStore.toString();
+
+
+        resp = await fetch(urlObj.toString(), {
+          method,
+          headers,
+          body: method === "GET" ? undefined : (isFormData ? (body as FormData) : JSON.stringify(body)),
+        ...nextOptions,
+        })
+      }
 
       const response = await resp.json();
 
