@@ -15,8 +15,16 @@ Frontend client for **WHAT-ABOUT**, a modern social network built with **Next.js
 
 ## INDICE 
 1. [ENVS](#envs)
-2. [STEPS TO START THE PROJECT](#steps-to-start-the-project)
-3. [TECHNOLOGIES LIBRERIES](#technologies-libreries)
+2. [Steps To Start The Project](#steps-to-start-the-project)
+3. [Technologies Libreries](#technologies-libreries)
+4. [Technical Specifications](#technical-specifications)
+    - [Http-Client](#http-client)
+    - [Authentication](#authentication)
+    - [Form Handling](#form-handling)
+    - [Style](#styles)
+    - [Directory Structure](#directory-structure)
+5. [Other Images](#other-images)
+
 
 ## ENVS
 
@@ -60,10 +68,10 @@ For form management, I implemented React Hook Form paired with the Zod resolver.
 | :---: | :---: |
 | ![Login](https://res.cloudinary.com/dqclkzb8r/image/upload/v1770773547/register_zxwgyn.png) | ![Register](https://res.cloudinary.com/dqclkzb8r/image/upload/v1770773547/register_zxwgyn.png) |
 
-## STYLES
+### STYLES
 For styling, I utilized Tailwind CSS v4, Tailwind Typography, and shadcn/ui. Additionally, I implemented custom animations, which I hand-coded directly in the globals.css file
 
-## DIRECTORY STRUCTURE
+### DIRECTORY STRUCTURE
 * actions → Contains all Server Actions, organized by feature.
 * app → Houses the application routes, layouts, and global styles (globals.css).
 * components → UI components. These are grouped by the specific page they are used in, except for:
