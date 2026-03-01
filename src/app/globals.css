@@ -205,3 +205,17 @@
   }
 }
 }
+
+@theme {
+
+  --animate-more-up-down: more-up-down 1s linear infinite;
+
+@keyframes more-up-down {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+}
