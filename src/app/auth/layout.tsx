@@ -1,3 +1,4 @@
+import Footer from "@/components/landing/footer";
 
 
 export const metadata = {
@@ -10,8 +11,9 @@ export const metadata = {
 
 const AuthLayout = ({ children }: { children: React.ReactNode}) => {
   return (
-    <div>
+    <div className="bg-stone-950">
         {children}
+        <Footer/>
     </div>
   )
 }

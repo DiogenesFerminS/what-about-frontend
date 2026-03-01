@@ -1,0 +1,75 @@
+import { LucideLink } from 'lucide-react'
+import Link from 'next/link'
+
+const Footer = () => {
+  return (
+          <footer className="p-4 bg-stone-950 border-t border-violet-800 mt-8">
+          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
+            <div className="py-2">
+              <h3 className="text-lg lg:text-xl font-bold">What - <span className="text-violet-600">About</span></h3>
+              <span className="text-sm block mt-2 text-gray-300">Copyright what-about 2026. All rights reserved.</span>
+              <span className="text-sm block mt-2 text-gray-300">diogenesdev@gmail.com</span>
+            </div>
+
+            <div className="py-2 text-gray-300 text-sm">
+              <ul>
+                <li>
+                  <Link
+                    href={"/auth/login"}
+                    className="hover:underline hover:text-violet-300 transition-all"
+                  >
+                    Go to Login
+                  </Link>
+
+                </li>
+                <li className="mt-2 block">
+                  <Link
+                    href={"/auth/register"}
+                    className="hover:underline hover:text-violet-300 transition-all"
+                  >Go to Register</Link>
+                </li>
+                <li className="mt-2 block">
+                  <Link
+                    href={"/"}
+                    className="hover:underline hover:text-violet-300 transition-all"
+                  >Home</Link>
+                </li>
+              </ul>
+            </div>
+
+            <div className="py-2 flex gap-3 items-center">
+                <div className="size-6 text-gray-300 hover:text-violet-500 transition-all">
+                  <Link
+                    href={"https://github.com/DiogenesFerminS/what-about-frontend"}
+                    target="_blank"
+                  >
+                    <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="currentColor"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"><path fillRule="evenodd" clipRule="evenodd" d="M12.026 2c-5.509 0-9.974 4.465-9.974 9.974 0 4.406 2.857 8.145 6.821 9.465.499.09.679-.217.679-.481 0-.237-.008-.865-.011-1.696-2.775.602-3.361-1.338-3.361-1.338-.452-1.152-1.107-1.459-1.107-1.459-.905-.619.069-.605.069-.605 1.002.07 1.527 1.028 1.527 1.028.89 1.524 2.336 1.084 2.902.829.091-.645.351-1.085.635-1.334-2.214-.251-4.542-1.107-4.542-4.93 0-1.087.389-1.979 1.024-2.675-.101-.253-.446-1.268.099-2.64 0 0 .837-.269 2.742 1.021a9.582 9.582 0 0 1 2.496-.336 9.554 9.554 0 0 1 2.496.336c1.906-1.291 2.742-1.021 2.742-1.021.545 1.372.203 2.387.099 2.64.64.696 1.024 1.587 1.024 2.675 0 3.833-2.33 4.675-4.552 4.922.355.308.675.916.675 1.846 0 1.334-.012 2.41-.012 2.737 0 .267.178.577.687.479C19.146 20.115 22 16.379 22 11.974 22 6.465 17.535 2 12.026 2z"></path></g></svg>
+                  </Link>
+                  
+                </div>
+
+                <div className="size-6 hover:text-violet-500 transition-all">
+                  <Link
+                    href={"https://www.linkedin.com/in/diogenes-fermin-a97a44329/"}
+                    target="_blank"
+                  >
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 382 382" xmlSpace="preserve" fill="currentColor" stroke="currentColor"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M347.445,0H34.555C15.471,0,0,15.471,0,34.555v312.889C0,366.529,15.471,382,34.555,382h312.889 C366.529,382,382,366.529,382,347.444V34.555C382,15.471,366.529,0,347.445,0z M118.207,329.844c0,5.554-4.502,10.056-10.056,10.056 H65.345c-5.554,0-10.056-4.502-10.056-10.056V150.403c0-5.554,4.502-10.056,10.056-10.056h42.806 c5.554,0,10.056,4.502,10.056,10.056V329.844z M86.748,123.432c-22.459,0-40.666-18.207-40.666-40.666S64.289,42.1,86.748,42.1 s40.666,18.207,40.666,40.666S109.208,123.432,86.748,123.432z M341.91,330.654c0,5.106-4.14,9.246-9.246,9.246H286.73 c-5.106,0-9.246-4.14-9.246-9.246v-84.168c0-12.556,3.683-55.021-32.813-55.021c-28.309,0-34.051,29.066-35.204,42.11v97.079 c0,5.106-4.139,9.246-9.246,9.246h-44.426c-5.106,0-9.246-4.14-9.246-9.246V149.593c0-5.106,4.14-9.246,9.246-9.246h44.426 c5.106,0,9.246,4.14,9.246,9.246v15.655c10.497-15.753,26.097-27.912,59.312-27.912c73.552,0,73.131,68.716,73.131,106.472 L341.91,330.654L341.91,330.654z"></path> </g></svg>
+                  </Link>
+                </div>
+
+              <div className="size-6 hover:text-violet-500 transition-all">
+                <Link
+                  href={"https://portafolio.fermin.com"}
+                  target="_black"
+                >
+                  <LucideLink/>
+                </Link>
+              </div>
+
+            </div>
+          </div>
+      </footer>
+  )
+}
+
+export default Footer
