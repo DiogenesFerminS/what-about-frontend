@@ -63,7 +63,7 @@ const HomePage = () => {
               </Link>
 
               <Link
-                href={"/wa"}
+                href={"/auth/login"}
                 className="py-2 px-4 block bg-violet-600 rounded-lg hover:scale-105 hover:bg-violet-900 transition-all"
               >
                 Go to Login

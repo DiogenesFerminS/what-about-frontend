@@ -47,7 +47,7 @@ const onSubmit = async (data: RegisterForm) => {
 
     toast.error('Something is wrong', {
       description: error || 'An unexpected error has occurred, please try again later',
-      position: "top-center",
+      position: "top-right",
       duration: 3000
     });
     setLockFields(false);
@@ -55,7 +55,7 @@ const onSubmit = async (data: RegisterForm) => {
   }
 
   toast.success(responseData, {
-    position: "top-center",
+    position: "top-right",
     duration: 5000,
   });
 }

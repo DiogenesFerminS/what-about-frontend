@@ -49,7 +49,7 @@ const ResetPasswordForm = ({token}: {token: string}) => {
      }
 
      toast.success("Your password was successfully updated", {
-        position: "top-center",
+        position: "top-right",
         duration: 5000,
      });
      setFieldLock(true);
